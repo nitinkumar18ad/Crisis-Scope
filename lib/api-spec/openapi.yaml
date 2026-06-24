@@ -1,0 +1,338 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Global Crisis Prediction AI API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: risk
+    description: Risk data operations
+  - name: alerts
+    description: Alert operations
+  - name: predictions
+    description: ML prediction operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /risk/data:
+    get:
+      operationId: getRiskData
+      tags: [risk]
+      summary: Get risk data
+      description: Returns normalized risk data per country
+      responses:
+        "200":
+          description: List of risk events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RiskEvent"
+
+  /risk/alerts:
+    get:
+      operationId: getAlerts
+      tags: [alerts]
+      summary: Get high-risk alerts
+      description: Returns all HIGH risk events sorted by severity
+      responses:
+        "200":
+          description: List of alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Alert"
+
+  /risk/anomalies:
+    get:
+      operationId: getAnomalies
+      tags: [risk]
+      summary: Get anomalies
+      description: Returns detected anomaly events
+      responses:
+        "200":
+          description: List of anomalies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RiskEvent"
+
+  /risk/predict:
+    get:
+      operationId: getPrediction
+      tags: [predictions]
+      summary: Predict risk for a country
+      description: Runs ML model and returns predicted risk level and confidence
+      parameters:
+        - name: country
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Prediction result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PredictionResult"
+
+  /risk/forecast:
+    get:
+      operationId: getForecast
+      tags: [predictions]
+      summary: Get 7-day forecast
+      description: Returns 7-day risk forecast for a country
+      parameters:
+        - name: country
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Forecast data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForecastResult"
+
+  /risk/summary:
+    get:
+      operationId: getGlobalSummary
+      tags: [risk]
+      summary: Global summary stats
+      description: Returns global statistics for the dashboard summary cards
+      responses:
+        "200":
+          description: Summary statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GlobalSummary"
+
+  /risk/history:
+    get:
+      operationId: getRiskHistory
+      tags: [risk]
+      summary: Risk history by category
+      description: Returns last 30 days of risk scores grouped by category
+      responses:
+        "200":
+          description: Risk history data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RiskHistoryPoint"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    RiskEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+        country:
+          type: string
+        region:
+          type: string
+        category:
+          type: string
+          enum: [climate, economic, supply_chain]
+        riskScore:
+          type: number
+          format: float
+        riskLevel:
+          type: string
+          enum: [Low, Medium, High]
+        source:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        isAnomaly:
+          type: boolean
+        lat:
+          type: number
+          format: float
+        lng:
+          type: number
+          format: float
+      required:
+        - id
+        - country
+        - region
+        - category
+        - riskScore
+        - riskLevel
+        - source
+        - timestamp
+        - isAnomaly
+        - lat
+        - lng
+
+    Alert:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        severity:
+          type: string
+        source:
+          type: string
+        country:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - description
+        - severity
+        - source
+        - country
+        - createdAt
+
+    PredictionResult:
+      type: object
+      properties:
+        country:
+          type: string
+        predictedRiskLevel:
+          type: string
+          enum: [Low, Medium, High]
+        confidence:
+          type: number
+          format: float
+        riskScore:
+          type: number
+          format: float
+        explanation:
+          type: string
+        features:
+          type: object
+          properties:
+            climate:
+              type: number
+            economic:
+              type: number
+            supplyChain:
+              type: number
+          required:
+            - climate
+            - economic
+            - supplyChain
+      required:
+        - country
+        - predictedRiskLevel
+        - confidence
+        - riskScore
+        - explanation
+        - features
+
+    ForecastResult:
+      type: object
+      properties:
+        country:
+          type: string
+        forecast:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+              riskScore:
+                type: number
+                format: float
+              riskLevel:
+                type: string
+            required:
+              - date
+              - riskScore
+              - riskLevel
+      required:
+        - country
+        - forecast
+
+    GlobalSummary:
+      type: object
+      properties:
+        totalAlerts:
+          type: integer
+        highRiskZones:
+          type: integer
+        avgGlobalRiskScore:
+          type: number
+          format: float
+        anomaliesDetected:
+          type: integer
+        totalCountries:
+          type: integer
+        lastUpdated:
+          type: string
+          format: date-time
+      required:
+        - totalAlerts
+        - highRiskZones
+        - avgGlobalRiskScore
+        - anomaliesDetected
+        - totalCountries
+        - lastUpdated
+
+    RiskHistoryPoint:
+      type: object
+      properties:
+        date:
+          type: string
+        climate:
+          type: number
+          format: float
+        economic:
+          type: number
+          format: float
+        supply_chain:
+          type: number
+          format: float
+      required:
+        - date
+        - climate
+        - economic
+        - supply_chain
