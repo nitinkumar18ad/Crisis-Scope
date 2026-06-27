@@ -139,6 +139,12 @@ paths:
       tags: [risk]
       summary: Risk history by category
       description: Returns last 30 days of risk scores grouped by category
+      parameters:
+        - name: country
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         "200":
           description: Risk history data

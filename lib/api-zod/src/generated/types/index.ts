@@ -11,6 +11,7 @@ export * from './forecastResult';
 export * from './forecastResultForecastItem';
 export * from './getForecastParams';
 export * from './getPredictionParams';
+export * from './getRiskHistoryParams';
 export * from './globalSummary';
 export * from './healthStatus';
 export * from './predictionResult';

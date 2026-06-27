@@ -131,6 +131,10 @@ export const GetGlobalSummaryResponse = zod.object({
  * Returns last 30 days of risk scores grouped by category
  * @summary Risk history by category
  */
+export const GetRiskHistoryQueryParams = zod.object({
+  "country": zod.coerce.string().optional()
+})
+
 export const GetRiskHistoryResponseItem = zod.object({
   "date": zod.string(),
   "climate": zod.number(),

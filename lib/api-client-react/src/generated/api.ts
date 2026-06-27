@@ -20,6 +20,7 @@ import type {
   ForecastResult,
   GetForecastParams,
   GetPredictionParams,
+  GetRiskHistoryParams,
   GlobalSummary,
   HealthStatus,
   PredictionResult,
@@ -614,21 +615,28 @@ export function useGetGlobalSummary<TData = Awaited<ReturnType<typeof getGlobalS
 
 
 
-export const getGetRiskHistoryUrl = () => {
+export const getGetRiskHistoryUrl = (params?: GetRiskHistoryParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/risk/history`
+  return stringifiedParams.length > 0 ? `/api/risk/history?${stringifiedParams}` : `/api/risk/history`
 }
 
 /**
  * Returns last 30 days of risk scores grouped by category
  * @summary Risk history by category
  */
-export const getRiskHistory = async ( options?: RequestInit): Promise<RiskHistoryPoint[]> => {
+export const getRiskHistory = async (params?: GetRiskHistoryParams, options?: RequestInit): Promise<RiskHistoryPoint[]> => {
 
-  return customFetch<RiskHistoryPoint[]>(getGetRiskHistoryUrl(),
+  return customFetch<RiskHistoryPoint[]>(getGetRiskHistoryUrl(params),
   {
     ...options,
     method: 'GET'
@@ -641,23 +649,23 @@ export const getRiskHistory = async ( options?: RequestInit): Promise<RiskHistor
 
 
 
-export const getGetRiskHistoryQueryKey = () => {
+export const getGetRiskHistoryQueryKey = (params?: GetRiskHistoryParams,) => {
     return [
-    `/api/risk/history`
+    `/api/risk/history`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetRiskHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getRiskHistory>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRiskHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetRiskHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getRiskHistory>>, TError = ErrorType<unknown>>(params?: GetRiskHistoryParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRiskHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetRiskHistoryQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetRiskHistoryQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRiskHistory>>> = ({ signal }) => getRiskHistory({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRiskHistory>>> = ({ signal }) => getRiskHistory(params, { signal, ...requestOptions });
 
 
 
@@ -675,11 +683,11 @@ export type GetRiskHistoryQueryError = ErrorType<unknown>
  */
 
 export function useGetRiskHistory<TData = Awaited<ReturnType<typeof getRiskHistory>>, TError = ErrorType<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRiskHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: GetRiskHistoryParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRiskHistory>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetRiskHistoryQueryOptions(options)
+  const queryOptions = getGetRiskHistoryQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

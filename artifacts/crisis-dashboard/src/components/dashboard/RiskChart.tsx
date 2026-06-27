@@ -6,12 +6,19 @@ import { cn } from "@/lib/utils";
 
 interface RiskChartProps {
   highlighted?: boolean;
+  selectedCountry?: string;
 }
 
-export function RiskChart({ highlighted }: RiskChartProps) {
-  const { data, isLoading } = useGetRiskHistory({
-    query: { refetchInterval: 30000, queryKey: ["/api/risk/history"] },
-  });
+export function RiskChart({ highlighted, selectedCountry }: RiskChartProps) {
+  const { data, isLoading } = useGetRiskHistory(
+    selectedCountry ? { country: selectedCountry } : {},
+    {
+      query: {
+        refetchInterval: 30000,
+        queryKey: ["/api/risk/history", selectedCountry ?? "global"],
+      },
+    },
+  );
 
   return (
     <Card
@@ -25,7 +32,7 @@ export function RiskChart({ highlighted }: RiskChartProps) {
     >
       <CardHeader>
         <CardTitle className={cn("text-lg transition-colors", highlighted && "text-primary")}>
-          Global Risk Trends (30 Days)
+          {selectedCountry ? `${selectedCountry} Risk Trends (30 Days)` : "Global Risk Trends (30 Days)"}
         </CardTitle>
       </CardHeader>
       <CardContent>

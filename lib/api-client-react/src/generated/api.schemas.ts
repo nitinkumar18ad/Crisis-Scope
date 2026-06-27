@@ -110,3 +110,7 @@ export type GetForecastParams = {
 country: string;
 };
 
+export type GetRiskHistoryParams = {
+country?: string;
+};
+

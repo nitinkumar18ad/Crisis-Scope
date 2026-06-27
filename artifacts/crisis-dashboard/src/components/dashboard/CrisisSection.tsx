@@ -14,6 +14,7 @@ interface CrisisSectionProps {
   onCountrySelect?: (country: string) => void;
   highlightAnomalies?: boolean;
   highlightHighRisk?: boolean;
+  selectedCountry?: string;
   className?: string;
 }
 
@@ -82,6 +83,7 @@ export function CrisisSection({
   onCountrySelect,
   highlightAnomalies,
   highlightHighRisk,
+  selectedCountry,
   className
 }: CrisisSectionProps) {
   const cfg = CRISIS_CONFIG[category];
@@ -95,15 +97,16 @@ export function CrisisSection({
   const events = useMemo(() => {
     if (!allEvents) return [];
     let filtered = allEvents.filter((e) => e.category === category);
+    if (selectedCountry) filtered = filtered.filter((e) => e.country === selectedCountry);
     if (highlightAnomalies) filtered = filtered.filter((e) => e.isAnomaly);
     if (highlightHighRisk) filtered = filtered.filter((e) => e.riskLevel === "High");
     return [...filtered].sort((a, b) => b.riskScore - a.riskScore);
-  }, [allEvents, category, highlightAnomalies, highlightHighRisk]);
+  }, [allEvents, category, highlightAnomalies, highlightHighRisk, selectedCountry]);
 
   const allCategoryEvents = useMemo(() => {
     if (!allEvents) return [];
-    return allEvents.filter((e) => e.category === category);
-  }, [allEvents, category]);
+    return allEvents.filter((e) => e.category === category && (!selectedCountry || e.country === selectedCountry));
+  }, [allEvents, category, selectedCountry]);
 
   const stats = useMemo(() => {
     if (!allCategoryEvents.length) return { high: 0, avg: 0, total: 0, anomalies: 0 };
@@ -141,6 +144,8 @@ export function CrisisSection({
                   ? "Showing anomaly events only"
                   : highlightHighRisk
                   ? "Showing critical risk zones"
+                  : selectedCountry
+                  ? `Focused on ${selectedCountry}`
                   : cfg.subtitle}
               </p>
             </div>
@@ -196,6 +201,8 @@ export function CrisisSection({
                   ? "No anomalies in this category"
                   : highlightHighRisk
                   ? "No critical zones in this category"
+                  : selectedCountry
+                  ? `No ${cfg.title.toLowerCase()} data for ${selectedCountry}`
                   : "No data available"}
               </span>
             </div>

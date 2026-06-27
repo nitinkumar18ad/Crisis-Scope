@@ -249,9 +249,12 @@ router.get("/risk/summary", async (req, res) => {
 });
 
 router.get("/risk/history", async (req, res) => {
+  const country = typeof req.query.country === "string" ? req.query.country.trim() : "";
+
   const all = await db
     .select()
     .from(riskEventsTable)
+    .where(country ? eq(riskEventsTable.country, country) : undefined)
     .orderBy(riskEventsTable.timestamp);
 
   const dayMap: Record<string, Record<string, number[]>> = {};
