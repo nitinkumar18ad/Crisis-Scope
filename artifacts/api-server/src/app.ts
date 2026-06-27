@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import path from "node:path";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
@@ -32,6 +33,12 @@ app.use(express.urlencoded({ extended: true }));
 import { startScheduler } from "./scheduler";
 
 app.use("/api", router);
+
+const publicDir = path.resolve(import.meta.dirname, "..", "dist", "public");
+app.use(express.static(publicDir));
+app.get(/^(?!\/api(?:\/|$)).*/, (_req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
 
 // Start background jobs
 startScheduler();

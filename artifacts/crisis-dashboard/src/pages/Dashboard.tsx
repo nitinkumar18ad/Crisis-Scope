@@ -102,12 +102,12 @@ export default function Dashboard() {
         {/* Filterable world map */}
         <div ref={mapSectionRef}>
           <SectionDivider label="Global Risk Map" />
-          <MagicCard glowColor="132, 0, 255" enableStars={false} className="p-1">
+          <div className="rounded-xl border border-border bg-card/20 p-1">
             <WorldMap
               onCountrySelect={setSelectedCountry}
               highlightHighRisk={mapHighlight === "highRisk"}
             />
-          </MagicCard>
+          </div>
         </div>
 
         {/* Risk history chart */}

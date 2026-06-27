@@ -22,7 +22,7 @@ catalogs:
       specifier: ^5.90.21
       version: 5.101.1
     '@types/node':
-      specifier: ^25.3.3
+      specifier: ^25.9.4
       version: 25.9.4
     '@types/react':
       specifier: ^19.2.0
@@ -160,6 +160,12 @@ importers:
       '@rollup/rollup-win32-x64-msvc':
         specifier: ^4.62.2
         version: 4.62.2
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.4
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       lightningcss-win32-x64-msvc:
         specifier: ^1.32.0
         version: 1.32.0
@@ -472,6 +478,9 @@ importers:
       drizzle-kit:
         specifier: ^0.31.9
         version: 0.31.10
+      tsx:
+        specifier: 'catalog:'
+        version: 4.22.4
 
   scripts:
     devDependencies:
@@ -1776,6 +1785,10 @@ packages:
 
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
+
+  dotenv@17.4.2:
+    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
+    engines: {node: '>=12'}
 
   drizzle-kit@0.31.10:
     resolution: {integrity: sha512-7OZcmQUrdGI+DUNNsKBn1aW8qSoKuTH7d0mYgSP8bAzdFzKoovxEFnoGQp2dVs82EOJeYycqRtciopszwUf8bw==}
@@ -4037,11 +4050,11 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 25.9.4
+      '@types/node': 26.0.0
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 25.9.4
+      '@types/node': 26.0.0
 
   '@types/cookie-parser@1.4.10(@types/express@5.0.6)':
     dependencies:
@@ -4049,7 +4062,7 @@ snapshots:
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 25.9.4
+      '@types/node': 26.0.0
 
   '@types/d3-array@3.2.2': {}
 
@@ -4079,7 +4092,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.1.1':
     dependencies:
-      '@types/node': 25.9.4
+      '@types/node': 26.0.0
       '@types/qs': 6.15.1
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -4130,12 +4143,12 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 25.9.4
+      '@types/node': 26.0.0
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 25.9.4
+      '@types/node': 26.0.0
 
   '@types/unist@3.0.3': {}
 
@@ -4353,6 +4366,8 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.7
       csstype: 3.2.3
+
+  dotenv@17.4.2: {}
 
   drizzle-kit@0.31.10:
     dependencies:
