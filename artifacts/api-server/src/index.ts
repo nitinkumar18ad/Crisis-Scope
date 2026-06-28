@@ -1,7 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 
-// For local development only
 if (process.env.VERCEL !== "1") {
   const rawPort = process.env["PORT"];
 
@@ -15,14 +14,14 @@ if (process.env.VERCEL !== "1") {
     throw new Error(`Invalid PORT value: "${rawPort}"`);
   }
 
-  app.listen(port, (err) => {
-    if (err) {
-      logger.error({ err }, "Error listening on port");
-      process.exit(1);
-    }
+  const server = app.listen(port, () => {
     logger.info({ port }, "Server listening");
+  });
+
+  server.on("error", (err: Error) => {
+    logger.error({ err }, "Error listening on port");
+    process.exit(1);
   });
 }
 
-// Vercel needs this default export
 export default app;
