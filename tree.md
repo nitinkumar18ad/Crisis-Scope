@@ -1,9 +1,7 @@
-Global-Crisis-Tracker
-├── .npmrc
+Crisis Scope
+├── README.md
 ├── artifacts
 │   ├── api-server
-│   │   ├── .replit-artifact
-│   │   │   └── artifact.toml
 │   │   ├── build.mjs
 │   │   ├── package.json
 │   │   ├── src
@@ -12,14 +10,14 @@ Global-Crisis-Tracker
 │   │   │   ├── lib
 │   │   │   │   └── logger.ts
 │   │   │   ├── middlewares
-│   │   │   └── routes
-│   │   │       ├── health.ts
-│   │   │       ├── index.ts
-│   │   │       └── risk.ts
-│   │   └── tsconfig.json
+│   │   │   ├── routes
+│   │   │   │   ├── health.ts
+│   │   │   │   ├── index.ts
+│   │   │   │   └── risk.ts
+│   │   │   └── scheduler.ts
+│   │   ├── tsconfig.json
+│   │   └── vercel.json
 │   └── crisis-dashboard
-│       ├── .replit-artifact
-│       │   └── artifact.toml
 │       ├── components.json
 │       ├── index.html
 │       ├── package.json
@@ -40,6 +38,7 @@ Global-Crisis-Tracker
 │       │   │   ├── layout
 │       │   │   │   └── Navbar.tsx
 │       │   │   └── ui
+│       │   │       ├── MagicBento.tsx
 │       │   │       ├── accordion.tsx
 │       │   │       ├── alert-dialog.tsx
 │       │   │       ├── alert.tsx
@@ -106,8 +105,10 @@ Global-Crisis-Tracker
 │       │       ├── Dashboard.tsx
 │       │       └── not-found.tsx
 │       ├── tsconfig.json
-│       ├── vite-mock-api.ts
+│       ├── vercel.json
 │       └── vite.config.ts
+├── docker-compose.yml
+├── handover.md
 ├── lib
 │   ├── api-client-react
 │   │   ├── package.json
@@ -133,6 +134,7 @@ Global-Crisis-Tracker
 │   │   │   │       ├── forecastResultForecastItem.ts
 │   │   │   │       ├── getForecastParams.ts
 │   │   │   │       ├── getPredictionParams.ts
+│   │   │   │       ├── getRiskHistoryParams.ts
 │   │   │   │       ├── globalSummary.ts
 │   │   │   │       ├── healthStatus.ts
 │   │   │   │       ├── index.ts
@@ -149,8 +151,10 @@ Global-Crisis-Tracker
 │       ├── drizzle.config.ts
 │       ├── package.json
 │       ├── src
+│       │   ├── ensure-schema.ts
 │       │   ├── index.ts
 │       │   └── schema
+│       │       ├── alerts.ts
 │       │       ├── index.ts
 │       │       └── riskEvents.ts
 │       └── tsconfig.json
