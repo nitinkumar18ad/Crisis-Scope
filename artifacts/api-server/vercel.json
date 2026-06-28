@@ -1,8 +1,10 @@
 {
   "version": 2,
+  "outputDirectory": ".",
+  "buildCommand": "pnpm run build",
   "builds": [
     {
-      "src": "api/index.ts",
+      "src": "api/index.js",
       "use": "@vercel/node@3",
       "config": { "nodeVersion": "22.x" }
     }
@@ -10,7 +12,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/index.ts"
+      "dest": "api/index.js"
     }
   ]
 }
