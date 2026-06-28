@@ -2,10 +2,7 @@
   "version": 2,
   "buildCommand": "cd ../.. && pnpm install && pnpm run build --filter @workspace/api-server",
   "outputDirectory": "dist",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/index.mjs"
-    }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.mjs" }
   ]
 }
