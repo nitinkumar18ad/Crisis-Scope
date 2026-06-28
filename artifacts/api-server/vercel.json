@@ -1,18 +1,16 @@
 {
   "version": 2,
-  "outputDirectory": ".",
-  "buildCommand": "pnpm run build",
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node@3",
-      "config": { "nodeVersion": "22.x" }
+  "buildCommand": "node ./build.mjs",
+  "outputDirectory": "dist",
+  "functions": {
+    "dist/index.mjs": {
+      "runtime": "nodejs22.x"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/index.js"
+      "dest": "dist/index.mjs"
     }
   ]
 }
