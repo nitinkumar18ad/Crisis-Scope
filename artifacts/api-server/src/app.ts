@@ -31,6 +31,10 @@ app.use(express.urlencoded({ extended: true }));
 
 import { startScheduler } from "./scheduler";
 
+app.get("/", (_req, res) => {
+  res.json({ status: "ok", message: "Crisis Scope API is running", docs: "/api/healthz" });
+});
+
 app.use("/api", router);
 
 
