@@ -245,7 +245,7 @@ async function seedEconomicAndSupplyChainData() {
 
 async function fetchReliefWeb() {
   try {
-    const res = await fetch("https://api.reliefweb.int/v1/reports?appname=globalcrisis&limit=10&profile=full");
+    const res: any = await fetch("https://api.reliefweb.int/v1/reports?appname=globalcrisis&limit=10&profile=full");
     if (!res.ok) return;
     const data = await res.json() as any;
     for (const item of data.data || []) {
@@ -283,7 +283,7 @@ async function fetchReliefWeb() {
 
 async function fetchUSGS() {
   try {
-    const res = await fetch("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5.0&limit=10");
+    const res: any = await fetch("https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5.0&limit=10");
     if (!res.ok) return;
     const data = await res.json() as any;
     for (const feature of data.features || []) {
@@ -333,7 +333,7 @@ async function fetchNewsAPI() {
   } else {
     try {
       const query = encodeURIComponent("war OR economic instability OR supply chain disruption OR inflation OR recession");
-      const res = await fetch(`https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&pageSize=20&apiKey=${apiKey}`);
+      const res: any = await fetch(`https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&pageSize=20&apiKey=${apiKey}`);
       if (!res.ok) {
         logger.warn("NewsAPI returned an error. Using mock data instead.");
         articles = getMockNewsArticles();
@@ -427,7 +427,7 @@ async function fetchOpenWeather() {
 
   for (const city of MAJOR_CITIES) {
     try {
-      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lng}&appid=${apiKey}&units=metric`);
+      const res: any = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lng}&appid=${apiKey}&units=metric`);
       if (!res.ok) continue;
       const data = await res.json() as any;
       
