@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "node ./build.mjs",
+  "framework": null,
+  "installCommand": "cd ../.. && pnpm install",
+  "buildCommand": "cd ../.. && pnpm run build:api",
   "rewrites": [
     {
       "source": "/(.*)",

@@ -120,7 +120,7 @@ router.get("/risk/predict", async (req, res) => {
     try {
       const prompt = `Analyze the risk for ${country} based on the following recent event categories: Climate (${climate}), Economic (${economic}), Supply Chain (${supplyChain}). The calculated risk score is ${riskScore}. Provide a concise 2-sentence explanation of why the risk is at this level and what to watch out for.`;
       
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+      const response: any = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -177,7 +177,7 @@ router.get("/risk/forecast", async (req, res) => {
     try {
       const prompt = `Generate a 7-day crisis risk forecast (scores from 0.0 to 1.0) for ${country}. The current base score is ${baseScore.toFixed(2)}. Return ONLY a raw JSON array of 7 numbers representing the scores for the next 7 days. Make the trend realistic based on standard crisis propagation. Do not include markdown formatting like \`\`\`json.`;
       
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+      const response: any = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
