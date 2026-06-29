@@ -1,16 +1,10 @@
 {
   "version": 2,
   "buildCommand": "node ./build.mjs",
-  "outputDirectory": "dist",
-  "functions": {
-    "dist/index.mjs": {
-      "runtime": "nodejs22.x"
-    }
-  },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "dist/index.mjs"
+      "source": "/(.*)",
+      "destination": "/api/index.js"
     }
   ]
 }
