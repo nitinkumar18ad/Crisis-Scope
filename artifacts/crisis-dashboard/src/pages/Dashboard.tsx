@@ -1,15 +1,19 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import React, { useState, useRef, useCallback, useMemo, Suspense, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { StatsRow, type StatCardTarget } from "@/components/dashboard/StatsRow";
-import { WorldMap } from "@/components/dashboard/WorldMap";
 import { RiskChart } from "@/components/dashboard/RiskChart";
 import { CrisisSection } from "@/components/dashboard/CrisisSection";
+const WorldMap = React.lazy(() => import("@/components/dashboard/WorldMap").then(module => ({ default: module.WorldMap })));
 import { CountryPredictionModal } from "@/components/dashboard/CountryPredictionModal";
 import { MagicContainer, MagicCard } from "@/components/ui/MagicBento";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useGetRiskData } from "@workspace/api-client-react";
-import { Search, X } from "lucide-react";
+import { Search, X, Globe } from "lucide-react";
+
+const heroVideoUrl =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260319_055001_8e16d972-3b2b-441c-86ad-2901a54682f9.mp4";
+const heroPosterUrl = "/opengraph.jpg";
 
 export default function Dashboard() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -17,10 +21,23 @@ export default function Dashboard() {
   const [highlightAnomalies, setHighlightAnomalies] = useState(false);
   const [mapHighlight, setMapHighlight] = useState<"highRisk" | null>(null);
   const [countryQuery, setCountryQuery] = useState("");
+  const [shouldLoadHeroVideo, setShouldLoadHeroVideo] = useState(() =>
+    typeof window === "undefined" ? true : window.innerWidth >= 480,
+  );
 
   const crisisSectionRef = useRef<HTMLDivElement>(null);
   const mapSectionRef = useRef<HTMLDivElement>(null);
   const chartSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateHeroVideoMode = () => {
+      setShouldLoadHeroVideo(window.innerWidth >= 480);
+    };
+
+    updateHeroVideoMode();
+    window.addEventListener("resize", updateHeroVideoMode);
+    return () => window.removeEventListener("resize", updateHeroVideoMode);
+  }, []);
 
   const { data: riskEvents } = useGetRiskData({
     query: { refetchInterval: 30000, queryKey: ["/api/risk/data", "dashboard-search"] },
@@ -84,10 +101,66 @@ export default function Dashboard() {
   }, [activeTarget]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30">
+    <div className="relative min-h-screen w-full overflow-x-hidden text-foreground selection:bg-primary/30">
+      <div className="relative z-10">
       <Navbar />
 
-      <main className="container max-w-[1600px] mx-auto px-4 py-6 space-y-6">
+      {/* Hero Section */}
+      <section className="hero-section relative min-h-screen w-full overflow-hidden">
+        {shouldLoadHeroVideo ? (
+          <video
+            className="bg-video"
+            src={heroVideoUrl}
+            poster={heroPosterUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+          />
+        ) : (
+          <div
+            className="bg-video"
+            style={{
+              backgroundImage: `url(${heroPosterUrl})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+              zIndex: 0,
+            }}
+          />
+        )}
+        <div className="video-overlay bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_24%),linear-gradient(180deg,rgba(10,15,30,0.35),rgba(10,15,30,0.78))]" />
+        
+        <div className="hero-content relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-12 text-center md:py-24">
+          <div className="absolute inset-0 z-[1] pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background/70 to-background" />
+          <div className="absolute inset-0 z-[1] pointer-events-none bg-animated-grid opacity-30" />
+
+          <div className="relative z-[2] mx-auto flex w-full max-w-4xl flex-col items-center gap-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/30 text-destructive text-sm font-semibold tracking-wide">
+            <div className="w-2 h-2 rounded-full bg-destructive animate-pulse-dot" />
+            CRITICAL THREAT LEVEL DETECTED
+          </div>
+          
+          <h1 className="font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60">
+            Global Crisis Prediction AI
+          </h1>
+          
+          <p className="text-muted-foreground max-w-2xl w-full text-lg md:text-xl">
+            Real-time monitoring and predictive analysis of climate, economic, and supply chain threats worldwide.
+          </p>
+          
+          <Button 
+            size="lg" 
+            className="mt-4 rounded-full font-bold px-8"
+            onClick={() => scrollTo(crisisSectionRef)}
+          >
+            View Live Intelligence
+          </Button>
+          </div>
+        </div>
+      </section>
+
+      <main className="container max-w-[1600px] w-full mx-auto px-4 py-6 space-y-6">
         <MagicContainer className="space-y-6">
         <div className="rounded-xl border border-border bg-card/30 p-4 backdrop-blur-sm">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -197,14 +270,26 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Filterable world map */}
-        <div ref={mapSectionRef}>
+        {/* Filterable world map - Desktop Only */}
+        <div ref={mapSectionRef} className="hidden lg:block">
           <SectionDivider label="Global Risk Map" />
           <div className="rounded-xl border border-border bg-card/20 p-1">
-            <WorldMap
-              onCountrySelect={setSelectedCountry}
-              highlightHighRisk={mapHighlight === "highRisk"}
-            />
+            <Suspense fallback={<div className="h-[420px] flex items-center justify-center bg-background/50 text-muted-foreground text-sm">Loading 3D Globe...</div>}>
+              <WorldMap
+                onCountrySelect={setSelectedCountry}
+                highlightHighRisk={mapHighlight === "highRisk"}
+              />
+            </Suspense>
+          </div>
+        </div>
+        
+        {/* Mobile SVG Map Placeholder */}
+        <div className="block lg:hidden">
+          <SectionDivider label="Global Risk Regions" />
+          <div className="rounded-xl border border-border bg-card/20 p-6 flex flex-col items-center justify-center text-center gap-4 text-muted-foreground min-h-[200px]">
+             <Globe className="h-12 w-12 opacity-50" />
+             <p className="text-sm">Detailed interactive map is optimized for larger screens.</p>
+             <p className="text-xs">Use the country list below to view specific threats.</p>
           </div>
         </div>
 
@@ -229,6 +314,7 @@ export default function Dashboard() {
         country={selectedCountry}
         onClose={() => setSelectedCountry(null)}
       />
+      </div>
     </div>
   );
 }

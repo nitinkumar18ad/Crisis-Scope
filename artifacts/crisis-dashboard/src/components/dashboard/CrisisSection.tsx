@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useGetRiskData } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -78,7 +78,7 @@ const COUNTRY_CODES: Record<string, string> = {
   "Kermadec Islands region": "nz", "New Zealand": "nz", "EU": "eu"
 };
 
-export function CrisisSection({
+export const CrisisSection = React.memo(function CrisisSection({
   category,
   onCountrySelect,
   highlightAnomalies,
@@ -90,7 +90,7 @@ export function CrisisSection({
   const { Icon } = cfg;
   const isHighlighted = highlightAnomalies || highlightHighRisk;
 
-  const { data: allEvents, isLoading } = useGetRiskData({
+  const { data: allEvents, isLoading, isError, refetch } = useGetRiskData({
     query: { refetchInterval: 30000, queryKey: ["/api/risk/data"] },
   });
 
@@ -191,6 +191,20 @@ export function CrisisSection({
                 <Skeleton key={i} className="h-12 w-full rounded-md" />
               ))}
             </div>
+          ) : isError ? (
+            <div className="flex flex-col items-center justify-center h-full min-h-[150px] gap-3 px-4 text-center">
+              <AlertTriangle className="h-8 w-8 text-destructive opacity-80" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Failed to load data</p>
+                <p className="text-xs text-muted-foreground">Unable to fetch {cfg.title.toLowerCase()} events.</p>
+              </div>
+              <button 
+                onClick={() => refetch()}
+                className="mt-2 px-3 py-1.5 text-xs font-medium border border-border rounded-md hover:bg-muted transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
           ) : events.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-32 text-sm text-muted-foreground gap-2">
               <span className="text-2xl opacity-40">
@@ -219,7 +233,7 @@ export function CrisisSection({
                     onClick={() => onCountrySelect?.(event.country)}
                     data-testid={`country-row-${category}-${event.id}`}
                     className={cn(
-                      "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors group",
+                      "w-full flex items-center gap-3 px-4 py-3 min-h-[50px] text-left transition-colors group",
                       isRowHighlighted
                         ? "bg-destructive/10 hover:bg-destructive/15"
                         : "hover:bg-white/5",
@@ -302,4 +316,4 @@ export function CrisisSection({
       )}
     </Card>
   );
-}
+});
