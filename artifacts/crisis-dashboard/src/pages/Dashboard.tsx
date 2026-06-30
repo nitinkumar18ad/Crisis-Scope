@@ -22,8 +22,9 @@ export default function Dashboard() {
   const [mapHighlight, setMapHighlight] = useState<"highRisk" | null>(null);
   const [countryQuery, setCountryQuery] = useState("");
   const [shouldLoadHeroVideo, setShouldLoadHeroVideo] = useState(() =>
-    typeof window === "undefined" ? true : window.innerWidth >= 480,
+    typeof window === "undefined" ? true : getShouldLoadHeroVideo(),
   );
+  const [heroVideoFailed, setHeroVideoFailed] = useState(false);
 
   const crisisSectionRef = useRef<HTMLDivElement>(null);
   const mapSectionRef = useRef<HTMLDivElement>(null);
@@ -31,13 +32,19 @@ export default function Dashboard() {
 
   useEffect(() => {
     const updateHeroVideoMode = () => {
-      setShouldLoadHeroVideo(window.innerWidth >= 480);
+      setShouldLoadHeroVideo(getShouldLoadHeroVideo());
     };
 
     updateHeroVideoMode();
     window.addEventListener("resize", updateHeroVideoMode);
     return () => window.removeEventListener("resize", updateHeroVideoMode);
   }, []);
+
+  useEffect(() => {
+    if (!shouldLoadHeroVideo) {
+      setHeroVideoFailed(false);
+    }
+  }, [shouldLoadHeroVideo]);
 
   const { data: riskEvents } = useGetRiskData({
     query: { refetchInterval: 30000, queryKey: ["/api/risk/data", "dashboard-search"] },
@@ -107,7 +114,7 @@ export default function Dashboard() {
 
       {/* Hero Section */}
       <section className="hero-section relative min-h-screen w-full overflow-hidden">
-        {shouldLoadHeroVideo ? (
+        {shouldLoadHeroVideo && !heroVideoFailed ? (
           <video
             className="bg-video"
             src={heroVideoUrl}
@@ -117,6 +124,8 @@ export default function Dashboard() {
             muted
             playsInline
             preload="auto"
+            onError={() => setHeroVideoFailed(true)}
+            onStalled={() => setHeroVideoFailed(true)}
           />
         ) : (
           <div
@@ -331,4 +340,20 @@ function SectionDivider({ label, highlighted }: { label: string; highlighted?: b
       <div className="h-px flex-1 bg-border/50" />
     </div>
   );
+}
+
+function getShouldLoadHeroVideo() {
+  if (typeof window === "undefined") {
+    return true;
+  }
+
+  const isSmallPhone = window.innerWidth < 480;
+  const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveDataEnabled =
+    "connection" in navigator &&
+    typeof (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === "boolean" &&
+    Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+
+  return !(isSmallPhone || (isTouchDevice && saveDataEnabled) || prefersReducedMotion);
 }

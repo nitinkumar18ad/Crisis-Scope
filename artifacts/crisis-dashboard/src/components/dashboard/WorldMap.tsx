@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { useGetRiskData } from "@workspace/api-client-react";
