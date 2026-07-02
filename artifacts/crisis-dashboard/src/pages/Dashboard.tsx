@@ -183,6 +183,8 @@ export default function Dashboard() {
                 <div className="relative flex-1">
                   <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
+                    id="country-search-input"
+                    name="country-search"
                     value={countryQuery}
                     onChange={(event) => setCountryQuery(event.target.value)}
                     list="country-search-options"
