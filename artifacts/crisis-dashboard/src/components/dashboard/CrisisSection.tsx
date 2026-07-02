@@ -184,7 +184,7 @@ export const CrisisSection = React.memo(function CrisisSection({
 
       {/* Country list */}
       <CardContent className="p-0 flex-1">
-        <ScrollArea className="h-[340px]">
+        <ScrollArea className="h-[260px] sm:h-[340px]">
           {isLoading ? (
             <div className="p-3 space-y-2">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -268,7 +268,7 @@ export const CrisisSection = React.memo(function CrisisSection({
                       </div>
                     </div>
 
-                    <div className="shrink-0 flex flex-col items-end gap-1.5 w-24">
+                    <div className="shrink-0 flex flex-col items-end gap-1.5 w-20 sm:w-24">
                       <div className="flex items-center gap-1.5">
                         <span className={cn("text-xs font-mono font-bold", cfg.color)}>
                           {(event.riskScore * 100).toFixed(0)}%

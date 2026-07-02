@@ -44,7 +44,7 @@ export function CountryPredictionModal({ country, onClose }: CountryPredictionMo
         <div>
           <p className="text-sm text-muted-foreground mb-1 uppercase tracking-wider">Predicted Risk</p>
           <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold font-mono">
+            <span className="text-2xl sm:text-3xl font-bold font-mono">
               {(prediction.riskScore * 100).toFixed(1)}%
             </span>
             <Badge 

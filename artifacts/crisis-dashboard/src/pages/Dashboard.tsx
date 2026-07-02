@@ -6,6 +6,7 @@ import { CrisisSection } from "@/components/dashboard/CrisisSection";
 const WorldMap = React.lazy(() => import("@/components/dashboard/WorldMap").then(module => ({ default: module.WorldMap })));
 import { CountryPredictionModal } from "@/components/dashboard/CountryPredictionModal";
 import { MagicContainer, MagicCard } from "@/components/ui/MagicBento";
+import { LightBeamButton } from "@/components/ui/LightBeamButton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useGetRiskData } from "@workspace/api-client-react";
@@ -113,7 +114,7 @@ export default function Dashboard() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="hero-section relative min-h-screen w-full overflow-hidden">
+      <section className="hero-section relative overflow-hidden">
         {shouldLoadHeroVideo && !heroVideoFailed ? (
           <video
             className="bg-video"
@@ -140,39 +141,38 @@ export default function Dashboard() {
         )}
         <div className="video-overlay bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_24%),linear-gradient(180deg,rgba(10,15,30,0.35),rgba(10,15,30,0.78))]" />
         
-        <div className="hero-content relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 py-12 text-center md:py-24">
+        <div className="hero-content relative flex flex-col items-center justify-center px-4 py-16 text-center sm:py-20 md:py-28">
           <div className="absolute inset-0 z-[1] pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background/70 to-background" />
           <div className="absolute inset-0 z-[1] pointer-events-none bg-animated-grid opacity-30" />
 
-          <div className="relative z-[2] mx-auto flex w-full max-w-4xl flex-col items-center gap-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/30 text-destructive text-sm font-semibold tracking-wide">
-            <div className="w-2 h-2 rounded-full bg-destructive animate-pulse-dot" />
+          <div className="relative z-[2] mx-auto flex w-full max-w-4xl flex-col items-center gap-5 sm:gap-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold tracking-wide">
+            <div className="w-2 h-2 rounded-full bg-destructive animate-pulse-dot flex-shrink-0" />
             CRITICAL THREAT LEVEL DETECTED
           </div>
           
-          <h1 className="font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60">
+          <h1 className="font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 px-2">
             Global Crisis Prediction AI
           </h1>
           
-          <p className="text-muted-foreground max-w-2xl w-full text-lg md:text-xl">
+          <p className="text-muted-foreground max-w-2xl w-full text-base sm:text-lg md:text-xl px-2">
             Real-time monitoring and predictive analysis of climate, economic, and supply chain threats worldwide.
           </p>
           
-          <Button 
-            size="lg" 
-            className="mt-4 rounded-full font-bold px-8"
+          <LightBeamButton
+            className="mt-2 px-6 sm:px-8 py-3 text-sm sm:text-base"
             onClick={() => scrollTo(crisisSectionRef)}
           >
             View Live Intelligence
-          </Button>
+          </LightBeamButton>
           </div>
         </div>
       </section>
 
-      <main className="container max-w-[1600px] w-full mx-auto px-4 py-6 space-y-6">
+      <main className="container max-w-[1600px] w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
         <MagicContainer className="space-y-6">
         <div className="rounded-xl border border-border bg-card/30 p-4 backdrop-blur-sm">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
             <div>
               <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                 Country Search
@@ -209,13 +209,14 @@ export default function Dashboard() {
                   Clear
                 </Button>
               </div>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-1.5 sm:gap-2">
                 {suggestedCountries.map((country) => (
                   <button
                     key={country}
                     type="button"
                     onClick={() => setCountryQuery(country)}
-                    className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                    style={{ touchAction: 'manipulation' }}
+                    className={`rounded-full border px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs transition-colors ${
                       matchedCountry === country
                         ? "border-primary/50 bg-primary/10 text-primary"
                         : "border-border text-muted-foreground hover:bg-muted/40 hover:text-foreground"
@@ -347,7 +348,7 @@ function getShouldLoadHeroVideo() {
     return true;
   }
 
-  const isSmallPhone = window.innerWidth < 480;
+  const isMobile = window.innerWidth < 768;
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveDataEnabled =
@@ -355,5 +356,5 @@ function getShouldLoadHeroVideo() {
     typeof (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === "boolean" &&
     Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
 
-  return !(isSmallPhone || (isTouchDevice && saveDataEnabled) || prefersReducedMotion);
+  return !(isMobile || (isTouchDevice && saveDataEnabled) || prefersReducedMotion);
 }

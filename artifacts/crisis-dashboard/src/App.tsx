@@ -18,6 +18,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
+      <Route path="/index.html" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -33,7 +34,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+        <WouterRouter base={import.meta.env.BASE_URL === '/' ? undefined : import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <Router />
         </WouterRouter>
         <Toaster />

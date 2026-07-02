@@ -28,8 +28,8 @@ export function Navbar() {
               CRISIS AI
             </span>
           </Link>
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-xs font-mono font-medium">
-            <div className="w-2 h-2 rounded-full bg-destructive animate-pulse-dot" />
+          <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-[10px] sm:text-xs font-mono font-medium shrink-0">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-destructive animate-pulse-dot" />
             LIVE
           </div>
         </div>
@@ -47,9 +47,10 @@ export function Navbar() {
         </div>
 
         <button
-          className="md:hidden p-2 text-foreground"
+          className="md:hidden p-2 text-foreground rounded-md hover:bg-muted/20 transition-colors"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle Menu"
+          style={{ touchAction: 'manipulation' }}
         >
           <Menu className="h-6 w-6" />
         </button>

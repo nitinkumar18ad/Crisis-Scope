@@ -41,9 +41,9 @@ export function RiskChart({ highlighted, selectedCountry }: RiskChartProps) {
             <Skeleton className="w-full h-full rounded-xl" />
           </div>
         ) : (
-          <div className="h-[300px] w-full">
+          <div className="h-[220px] sm:h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <LineChart data={data} margin={{ top: 5, right: 8, left: -15, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis
                   dataKey="date"

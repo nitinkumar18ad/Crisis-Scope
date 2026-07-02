@@ -126,7 +126,7 @@ export function StatsRow({ onCardClick, activeTarget }: StatsRowProps) {
                 {isLoading ? (
                   <Skeleton className="h-8 w-20" />
                 ) : (
-                  <div className="text-3xl font-bold font-mono tracking-tight text-foreground">
+                  <div className="text-2xl md:text-3xl font-bold font-mono tracking-tight text-foreground">
                     {stat.value}
                   </div>
                 )}

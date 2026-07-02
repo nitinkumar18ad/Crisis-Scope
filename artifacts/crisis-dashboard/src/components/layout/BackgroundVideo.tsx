@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 
 type BackgroundVideoProps = {
@@ -16,8 +16,19 @@ export function BackgroundVideo({
   src = defaultStreamUrl,
 }: BackgroundVideoProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(() => 
+    typeof window !== "undefined" ? window.innerWidth >= 768 : true
+  );
 
   useEffect(() => {
+    const handleResize = () => setShouldLoadVideo(window.innerWidth >= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoadVideo) return;
+
     const video = videoRef.current;
     if (!video) {
       return undefined;
@@ -47,29 +58,46 @@ export function BackgroundVideo({
     return () => {
       hls.destroy();
     };
-  }, [src]);
+  }, [src, shouldLoadVideo]);
 
   return (
     <>
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        poster={poster}
-        className="bg-video"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          objectPosition: "center",
-          zIndex: 0,
-        }}
-      />
+      {shouldLoadVideo ? (
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={poster}
+          className="bg-video"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+            zIndex: 0,
+          }}
+        />
+      ) : (
+        <div
+          className="bg-video"
+          style={{
+            backgroundImage: `url(${poster})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 0,
+          }}
+        />
+      )}
       <div
         aria-hidden="true"
         className={overlayClassName ? `video-overlay ${overlayClassName}` : "video-overlay"}
