@@ -130,11 +130,8 @@ export default function Dashboard() {
           />
         ) : (
           <div
-            className="bg-video"
+            className="bg-video bg-gradient-to-br from-[#0a0f1e] via-[#111827] to-[#0a0f1e]"
             style={{
-              backgroundImage: `url(${heroPosterUrl})`,
-              backgroundPosition: "center",
-              backgroundSize: "cover",
               zIndex: 0,
             }}
           />
@@ -348,7 +345,7 @@ function getShouldLoadHeroVideo() {
     return true;
   }
 
-  const isMobile = window.innerWidth < 768;
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveDataEnabled =

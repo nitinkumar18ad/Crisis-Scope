@@ -17,13 +17,18 @@ export function BackgroundVideo({
 }: BackgroundVideoProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(() => 
-    typeof window !== "undefined" ? window.innerWidth >= 768 : true
+    typeof window !== "undefined" ? window.matchMedia('(min-width: 768px)').matches : true
   );
 
   useEffect(() => {
-    const handleResize = () => setShouldLoadVideo(window.innerWidth >= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    
+    const handleResize = (e: MediaQueryListEvent) => setShouldLoadVideo(e.matches);
+    setShouldLoadVideo(mediaQuery.matches);
+    
+    mediaQuery.addEventListener("change", handleResize);
+    return () => mediaQuery.removeEventListener("change", handleResize);
   }, []);
 
   useEffect(() => {
@@ -84,11 +89,8 @@ export function BackgroundVideo({
         />
       ) : (
         <div
-          className="bg-video"
+          className="bg-video bg-gradient-to-br from-[#0a0f1e] via-slate-900/50 to-[#0a0f1e]"
           style={{
-            backgroundImage: `url(${poster})`,
-            backgroundPosition: "center",
-            backgroundSize: "cover",
             position: "absolute",
             top: 0,
             left: 0,
