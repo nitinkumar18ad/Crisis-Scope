@@ -9,7 +9,7 @@ import { MagicContainer, MagicCard } from "@/components/ui/MagicBento";
 import { LightBeamButton } from "@/components/ui/LightBeamButton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useGetRiskData } from "@workspace/api-client-react";
+import { useGetRiskData, type RiskEvent } from "@workspace/api-client-react";
 import { Search, X, Globe } from "lucide-react";
 import { BackgroundVideo } from "@/components/layout/BackgroundVideo";
 
@@ -28,13 +28,17 @@ export default function Dashboard() {
   const chartSectionRef = useRef<HTMLDivElement>(null);
 
 
-  const { data: riskEvents } = useGetRiskData({
+  const riskData = useGetRiskData<RiskEvent[]>({
     query: { refetchInterval: 30000, queryKey: ["/api/risk/data", "dashboard-search"] },
   });
+  const riskEvents: RiskEvent[] | undefined = riskData.data;
 
-  const countries = useMemo(() => {
+  const countries = useMemo<string[]>(() => {
     if (!riskEvents) return [];
-    return [...new Set(riskEvents.map((event: any) => event.country))].sort((a, b) => a.localeCompare(b));
+
+    return Array.from(new Set(riskEvents.map((event: RiskEvent) => event.country))).sort((a: string, b: string) =>
+      a.localeCompare(b),
+    );
   }, [riskEvents]);
 
   const normalizedQuery = countryQuery.trim().toLowerCase();
