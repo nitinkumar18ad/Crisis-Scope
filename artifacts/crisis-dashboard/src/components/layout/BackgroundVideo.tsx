@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Hls from "hls.js";
 
 type BackgroundVideoProps = {
@@ -18,26 +18,18 @@ export function BackgroundVideo({
   src = defaultStreamUrl,
 }: BackgroundVideoProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(() => 
-    typeof window !== "undefined" ? window.matchMedia('(min-width: 768px)').matches : true
-  );
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mediaQuery = window.matchMedia('(min-width: 768px)');
-    
-    const handleResize = (e: MediaQueryListEvent) => setShouldLoadVideo(e.matches);
-    setShouldLoadVideo(mediaQuery.matches);
-    
-    mediaQuery.addEventListener("change", handleResize);
-    return () => mediaQuery.removeEventListener("change", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (!shouldLoadVideo) return;
-
     const video = videoRef.current;
     if (!video) {
+      return undefined;
+    }
+
+    const isHlsStream = src.endsWith(".m3u8");
+
+    if (!isHlsStream) {
+      video.src = src;
+      void video.play().catch(() => undefined);
       return undefined;
     }
 
@@ -48,6 +40,8 @@ export function BackgroundVideo({
     }
 
     if (!Hls.isSupported()) {
+      video.src = src;
+      void video.play().catch(() => undefined);
       return undefined;
     }
 
@@ -65,43 +59,29 @@ export function BackgroundVideo({
     return () => {
       hls.destroy();
     };
-  }, [src, shouldLoadVideo]);
+  }, [src]);
 
   return (
     <>
-      {shouldLoadVideo ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster={poster}
-          className="bg-video"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center",
-            zIndex: 0,
-          }}
-        />
-      ) : (
-        <div
-          className="bg-video bg-gradient-to-br from-[#0a0f1e] via-slate-900/50 to-[#0a0f1e]"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: 0,
-          }}
-        />
-      )}
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        poster={poster}
+        className="bg-video"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          zIndex: 0,
+        }}
+      />
       <div
         aria-hidden="true"
         className={overlayClassName ? `video-overlay ${overlayClassName}` : "video-overlay"}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo, Suspense, useEffect } from "react";
+import React, { useState, useRef, useCallback, useMemo, Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { StatsRow, type StatCardTarget } from "@/components/dashboard/StatsRow";
 import { RiskChart } from "@/components/dashboard/RiskChart";
@@ -10,7 +10,7 @@ import { LightBeamButton } from "@/components/ui/LightBeamButton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useGetRiskData, type RiskEvent } from "@workspace/api-client-react";
-import { Search, X, Globe } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { BackgroundVideo } from "@/components/layout/BackgroundVideo";
 
 const heroPosterUrl = "/opengraph.jpg";
@@ -135,13 +135,13 @@ export default function Dashboard() {
 
         <main className="container max-w-[1600px] w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
           <MagicContainer className="space-y-6">
-            <div className="rounded-xl border border-border bg-card/30 p-4 backdrop-blur-sm">
+            <div className="group rounded-xl border border-border bg-card/30 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-card/40 hover:shadow-lg hover:shadow-primary/5">
               <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                 <div>
-                  <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  <div className="text-base font-semibold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
                     Country Search
                   </div>
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <p className="mt-1 text-sm text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80">
                     Search a country to filter the crisis tables and 30-day trend chart together.
                   </p>
                 </div>
@@ -156,7 +156,7 @@ export default function Dashboard() {
                         onChange={(event) => setCountryQuery(event.target.value)}
                         list="country-search-options"
                         placeholder="Search by country name, for example India or Brazil"
-                        className="pl-9"
+                        className="pl-9 transition-all duration-300 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
                       />
                       <datalist id="country-search-options">
                         {countries.map((country) => (
@@ -169,7 +169,7 @@ export default function Dashboard() {
                       variant="outline"
                       onClick={() => setCountryQuery("")}
                       disabled={!countryQuery}
-                      className="sm:w-auto"
+                      className="sm:w-auto transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
                     >
                       <X className="mr-2 h-4 w-4" />
                       Clear
@@ -182,7 +182,7 @@ export default function Dashboard() {
                         type="button"
                         onClick={() => setCountryQuery(country)}
                         style={{ touchAction: 'manipulation' }}
-                        className={`rounded-full border px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs transition-colors ${matchedCountry === country
+                        className={`rounded-full border px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:text-foreground ${matchedCountry === country
                             ? "border-primary/50 bg-primary/10 text-primary"
                             : "border-border text-muted-foreground hover:bg-muted/40 hover:text-foreground"
                           }`}
@@ -245,26 +245,16 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Filterable world map - Desktop Only */}
-            <div ref={mapSectionRef} className="hidden lg:block">
+            {/* Filterable world map */}
+            <div ref={mapSectionRef}>
               <SectionDivider label="Global Risk Map" />
               <div className="rounded-xl border border-border bg-card/20 p-1">
-                <Suspense fallback={<div className="h-[420px] flex items-center justify-center bg-background/50 text-muted-foreground text-sm">Loading 3D Globe...</div>}>
+                <Suspense fallback={<div className="h-[320px] lg:h-[420px] flex items-center justify-center bg-background/50 text-muted-foreground text-sm">Loading 3D Globe...</div>}>
                   <WorldMap
                     onCountrySelect={setSelectedCountry}
                     highlightHighRisk={mapHighlight === "highRisk"}
                   />
                 </Suspense>
-              </div>
-            </div>
-
-            {/* Mobile SVG Map Placeholder */}
-            <div className="block lg:hidden">
-              <SectionDivider label="Global Risk Regions" />
-              <div className="rounded-xl border border-border bg-card/20 p-6 flex flex-col items-center justify-center text-center gap-4 text-muted-foreground min-h-[200px]">
-                <Globe className="h-12 w-12 opacity-50" />
-                <p className="text-sm">Detailed interactive map is optimized for larger screens.</p>
-                <p className="text-xs">Use the country list below to view specific threats.</p>
               </div>
             </div>
 
@@ -298,7 +288,7 @@ function SectionDivider({ label, highlighted }: { label: string; highlighted?: b
   return (
     <div className="flex items-center gap-2 mb-4">
       <div className="h-px flex-1 bg-border/50" />
-      <span className={`text-[10px] font-mono uppercase tracking-[0.2em] px-3 transition-colors duration-300 ${highlighted ? "text-primary" : "text-muted-foreground"
+      <span className={`text-xs sm:text-sm font-mono uppercase tracking-[0.2em] px-3 transition-colors duration-300 ${highlighted ? "text-primary" : "text-muted-foreground"
         }`}>
         {label}
       </span>
