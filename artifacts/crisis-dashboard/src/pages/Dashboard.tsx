@@ -102,43 +102,49 @@ export default function Dashboard() {
         <section className="hero-section relative overflow-hidden">
   <BackgroundVideo
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260319_055001_8e16d972-3b2b-441c-86ad-2901a54682f9.mp4"
-    overlayClassName="bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.12),transparent_24%),linear-gradient(180deg,rgba(10,15,30,0.35),rgba(10,15,30,0.78))]"
+    overlayClassName="hero-video-overlay"
   />
 
   <div className="hero-content relative flex flex-col items-center justify-center px-4 py-16 text-center sm:py-20 md:py-28">
-            <div className="absolute inset-0 z-[1] pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background/70 to-background" />
-            <div className="absolute inset-0 z-[1] pointer-events-none bg-animated-grid opacity-30" />
+            <div
+              className="absolute inset-0 z-0 pointer-events-none from-primary/10 via-background/70 to-background"
+              style={{ background: "radial-gradient(circle at center, var(--tw-gradient-stops))" }}
+            />
+            <div className="absolute inset-0 z-0 pointer-events-none bg-animated-grid opacity-30" />
 
-            <div className="relative z-[2] mx-auto flex w-full max-w-4xl flex-col items-center gap-5 sm:gap-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/30 text-destructive text-xs sm:text-sm font-semibold tracking-wide">
-                <div className="w-2 h-2 rounded-full bg-destructive animate-pulse-dot flex-shrink-0" />
-                CRITICAL THREAT LEVEL DETECTED
+            <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center gap-5 sm:gap-6">
+              <div className="hero-badge inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-red-100 backdrop-blur-md sm:text-sm animate-hero-fade-up" style={{ animationDelay: "80ms" }}>
+                <div className="hero-badge-dot h-2 w-2 shrink-0 rounded-full bg-red-400 animate-pulse-dot" />
+                AI-Powered Global Threat Intelligence
               </div>
 
-              <h1 className="font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 px-2">
-                Global Crisis Prediction AI
+              <h1 className="hero-title px-2 text-5xl font-extrabold leading-none tracking-tight text-transparent bg-clip-text bg-linear-to-r from-white via-slate-100 to-cyan-300 sm:text-6xl lg:text-7xl animate-hero-fade-up" style={{ animationDelay: "160ms" }}>
+                Predict Global Crises
+                <br />
+                Before They Happen
               </h1>
 
-              <p className="text-muted-foreground max-w-2xl w-full text-base sm:text-lg md:text-xl px-2">
-                Real-time monitoring and predictive analysis of climate, economic, and supply chain threats worldwide.
+              <p className="hero-subtitle w-full px-2 text-lg leading-relaxed text-slate-300/90 sm:text-xl animate-hero-fade-up" style={{ animationDelay: "240ms" }}>
+                Monitor climate, geopolitical, economic, and supply chain risks in real time with AI-powered forecasting, interactive analytics, and actionable insights.
               </p>
 
               <LightBeamButton
-                className="mt-2 px-6 sm:px-8 py-3 text-sm sm:text-base"
+                className="hero-cta mt-2 px-6 sm:px-8 py-3 text-sm sm:text-base transition-all duration-300 animate-hero-fade-up"
+                style={{ animationDelay: "320ms" }}
                 onClick={() => scrollTo(crisisSectionRef)}
               >
-                View Live Intelligence
+                Explore Live Intelligence
               </LightBeamButton>
             </div>
           </div>
         </section>
 
-        <main className="container max-w-[1600px] w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
+        <main className="container w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" style={{ maxWidth: "1600px" }}>
           <MagicContainer className="space-y-6">
             <div className="group rounded-xl border border-border bg-card/30 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-card/40 hover:shadow-lg hover:shadow-primary/5">
               <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                 <div>
-                  <div className="text-base font-semibold uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+                  <div className="text-base font-semibold uppercase text-muted-foreground transition-colors duration-300 group-hover:text-foreground" style={{ letterSpacing: "0.2em" }}>
                     Country Search
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80">
@@ -182,7 +188,7 @@ export default function Dashboard() {
                         type="button"
                         onClick={() => setCountryQuery(country)}
                         style={{ touchAction: 'manipulation' }}
-                        className={`rounded-full border px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:text-foreground ${matchedCountry === country
+                        className={`rounded-full border px-2 py-0.5 sm:px-3 sm:py-1 text-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:text-foreground ${matchedCountry === country
                             ? "border-primary/50 bg-primary/10 text-primary"
                             : "border-border text-muted-foreground hover:bg-muted/40 hover:text-foreground"
                           }`}
@@ -219,7 +225,7 @@ export default function Dashboard() {
                     highlightAnomalies={highlightAnomalies}
                     highlightHighRisk={activeTarget === "alerts"}
                     selectedCountry={matchedCountry ?? undefined}
-                    className="!border-0 !bg-transparent shadow-none"
+                    className="border-none bg-transparent shadow-none"
                   />
                 </MagicCard>
                 <MagicCard glowColor="245, 158, 11">
@@ -229,7 +235,7 @@ export default function Dashboard() {
                     highlightAnomalies={highlightAnomalies}
                     highlightHighRisk={activeTarget === "alerts"}
                     selectedCountry={matchedCountry ?? undefined}
-                    className="!border-0 !bg-transparent shadow-none"
+                    className="border-none bg-transparent shadow-none"
                   />
                 </MagicCard>
                 <MagicCard glowColor="244, 63, 94">
@@ -239,7 +245,7 @@ export default function Dashboard() {
                     highlightAnomalies={highlightAnomalies}
                     highlightHighRisk={activeTarget === "alerts"}
                     selectedCountry={matchedCountry ?? undefined}
-                    className="!border-0 !bg-transparent shadow-none"
+                    className="border-none bg-transparent shadow-none"
                   />
                 </MagicCard>
               </div>
@@ -249,7 +255,7 @@ export default function Dashboard() {
             <div ref={mapSectionRef}>
               <SectionDivider label="Global Risk Map" />
               <div className="rounded-xl border border-border bg-card/20 p-1">
-                <Suspense fallback={<div className="h-[320px] lg:h-[420px] flex items-center justify-center bg-background/50 text-muted-foreground text-sm">Loading 3D Globe...</div>}>
+                <Suspense fallback={<div className="h-80 lg:h-105 flex items-center justify-center bg-background/50 text-muted-foreground text-sm">Loading 3D Globe...</div>}>
                   <WorldMap
                     onCountrySelect={setSelectedCountry}
                     highlightHighRisk={mapHighlight === "highRisk"}
@@ -288,9 +294,10 @@ function SectionDivider({ label, highlighted }: { label: string; highlighted?: b
   return (
     <div className="flex items-center gap-2 mb-4">
       <div className="h-px flex-1 bg-border/50" />
-      <span className={`text-xs sm:text-sm font-mono uppercase tracking-[0.2em] px-3 transition-colors duration-300 ${highlighted ? "text-primary" : "text-muted-foreground"
-        }`}>
-        {label}
+      <span className="text-xs sm:text-sm font-mono uppercase px-3 transition-colors duration-300" style={{ letterSpacing: "0.2em" }}>
+        <span className={highlighted ? "text-primary" : "text-muted-foreground"}>
+          {label}
+        </span>
       </span>
       <div className="h-px flex-1 bg-border/50" />
     </div>
