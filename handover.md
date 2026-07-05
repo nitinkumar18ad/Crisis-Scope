@@ -245,3 +245,5 @@ pnpm run ensure-schema
 
 - 2026-06-27: Initial handover created. Captured monorepo layout, runtime flow, env requirements, data model, codegen flow, and the rule that future AIs must keep this file updated after changes.
 - 2026-06-27: Fixed missing-table runtime failures by adding `lib/db/src/ensure-schema.ts` and the `lib/db` script `ensure-schema`. Also documented that `artifacts/api-server/.env` is the important DB env for the running API, while the root `.env` may differ.
+- 2026-07-05: Frontend dev/build config lives in `artifacts/crisis-dashboard/vite.config.ts`; it resolves `@` to `src`, `@assets` to `attached_assets`, builds to `dist/public`, proxies `/api` to `http://localhost:8080`, and uses `PORT` with a default of `5173`.
+- 2026-07-05: Current UI work is concentrated in `artifacts/crisis-dashboard/src/components/ui/LightBeamButton.tsx`, `MagicBento.tsx`, `artifacts/crisis-dashboard/src/components/layout/BackgroundVideo.tsx`, and `artifacts/crisis-dashboard/src/components/dashboard/StatsRow.tsx`.

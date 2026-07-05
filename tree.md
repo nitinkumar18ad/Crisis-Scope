@@ -1,33 +1,49 @@
+# Crisis Scope Repository Tree
+
+Curated snapshot of the current workspace as of 2026-07-05.
+
+- Includes source, config, docs, and notable local-only folders.
+- Omits bulky generated/vendor content such as `node_modules`, most `dist`, and pnpm store internals unless they clarify repo structure.
+
+```text
 Crisis Scope
-├── README.md
-├── artifacts
-│   ├── api-server
-│   │   ├── build.mjs
-│   │   ├── package.json
-│   │   ├── src
+├── .agents/
+├── .codex/
+├── .local/
+│   ├── secondary_skills/
+│   ├── share/
+│   ├── skills/
+│   └── state/
+├── .vscode/
+│   └── settings.json
+├── artifacts/
+│   ├── api-server/
+│   │   ├── .env
+│   │   ├── api/
+│   │   │   └── index.js
+│   │   ├── public/
+│   │   ├── src/
 │   │   │   ├── app.ts
 │   │   │   ├── index.ts
-│   │   │   ├── lib
+│   │   │   ├── lib/
 │   │   │   │   └── logger.ts
-│   │   │   ├── middlewares
-│   │   │   ├── routes
+│   │   │   ├── middlewares/
+│   │   │   ├── routes/
 │   │   │   │   ├── health.ts
 │   │   │   │   ├── index.ts
 │   │   │   │   └── risk.ts
 │   │   │   └── scheduler.ts
+│   │   ├── build.mjs
+│   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   └── vercel.json
-│   └── crisis-dashboard
-│       ├── components.json
-│       ├── index.html
-│       ├── package.json
-│       ├── public
+│   └── crisis-dashboard/
+│       ├── public/
 │       │   ├── favicon.svg
 │       │   └── opengraph.jpg
-│       ├── src
-│       │   ├── App.tsx
-│       │   ├── components
-│       │   │   ├── dashboard
+│       ├── src/
+│       │   ├── components/
+│       │   │   ├── dashboard/
 │       │   │   │   ├── AlertsPanel.tsx
 │       │   │   │   ├── AnomaliesList.tsx
 │       │   │   │   ├── CountryPredictionModal.tsx
@@ -35,138 +51,96 @@ Crisis Scope
 │       │   │   │   ├── RiskChart.tsx
 │       │   │   │   ├── StatsRow.tsx
 │       │   │   │   └── WorldMap.tsx
-│       │   │   ├── layout
+│       │   │   ├── layout/
+│       │   │   │   ├── BackgroundVideo.tsx
 │       │   │   │   └── Navbar.tsx
-│       │   │   └── ui
+│       │   │   └── ui/
+│       │   │       ├── LightBeamButton.tsx
 │       │   │       ├── MagicBento.tsx
-│       │   │       ├── accordion.tsx
-│       │   │       ├── alert-dialog.tsx
-│       │   │       ├── alert.tsx
-│       │   │       ├── aspect-ratio.tsx
-│       │   │       ├── avatar.tsx
-│       │   │       ├── badge.tsx
-│       │   │       ├── breadcrumb.tsx
-│       │   │       ├── button-group.tsx
-│       │   │       ├── button.tsx
-│       │   │       ├── calendar.tsx
-│       │   │       ├── card.tsx
-│       │   │       ├── carousel.tsx
-│       │   │       ├── chart.tsx
-│       │   │       ├── checkbox.tsx
-│       │   │       ├── collapsible.tsx
-│       │   │       ├── command.tsx
-│       │   │       ├── context-menu.tsx
-│       │   │       ├── dialog.tsx
-│       │   │       ├── drawer.tsx
-│       │   │       ├── dropdown-menu.tsx
-│       │   │       ├── empty.tsx
-│       │   │       ├── field.tsx
-│       │   │       ├── form.tsx
-│       │   │       ├── hover-card.tsx
-│       │   │       ├── input-group.tsx
-│       │   │       ├── input-otp.tsx
-│       │   │       ├── input.tsx
-│       │   │       ├── item.tsx
-│       │   │       ├── kbd.tsx
-│       │   │       ├── label.tsx
-│       │   │       ├── menubar.tsx
-│       │   │       ├── navigation-menu.tsx
-│       │   │       ├── pagination.tsx
-│       │   │       ├── popover.tsx
-│       │   │       ├── progress.tsx
-│       │   │       ├── radio-group.tsx
-│       │   │       ├── resizable.tsx
-│       │   │       ├── scroll-area.tsx
-│       │   │       ├── select.tsx
-│       │   │       ├── separator.tsx
-│       │   │       ├── sheet.tsx
-│       │   │       ├── sidebar.tsx
-│       │   │       ├── skeleton.tsx
-│       │   │       ├── slider.tsx
-│       │   │       ├── sonner.tsx
-│       │   │       ├── spinner.tsx
-│       │   │       ├── switch.tsx
-│       │   │       ├── table.tsx
-│       │   │       ├── tabs.tsx
-│       │   │       ├── textarea.tsx
-│       │   │       ├── toast.tsx
-│       │   │       ├── toaster.tsx
-│       │   │       ├── toggle-group.tsx
-│       │   │       ├── toggle.tsx
-│       │   │       └── tooltip.tsx
-│       │   ├── hooks
+│       │   │       └── ...shared shadcn-style UI primitives
+│       │   ├── hooks/
 │       │   │   ├── use-mobile.tsx
 │       │   │   └── use-toast.ts
-│       │   ├── index.css
-│       │   ├── lib
+│       │   ├── lib/
 │       │   │   └── utils.ts
-│       │   ├── main.tsx
-│       │   └── pages
-│       │       ├── Dashboard.tsx
-│       │       └── not-found.tsx
+│       │   ├── pages/
+│       │   │   ├── Dashboard.tsx
+│       │   │   └── not-found.tsx
+│       │   ├── App.tsx
+│       │   ├── index.css
+│       │   └── main.tsx
+│       ├── components.json
+│       ├── index.html
+│       ├── package.json
+│       ├── run3-out.txt
 │       ├── tsconfig.json
 │       ├── vercel.json
 │       └── vite.config.ts
-├── docker-compose.yml
-├── handover.md
-├── lib
-│   ├── api-client-react
-│   │   ├── package.json
-│   │   ├── src
-│   │   │   ├── custom-fetch.ts
-│   │   │   ├── generated
+├── lib/
+│   ├── api-client-react/
+│   │   ├── src/
+│   │   │   ├── generated/
 │   │   │   │   ├── api.schemas.ts
 │   │   │   │   └── api.ts
+│   │   │   ├── custom-fetch.ts
 │   │   │   └── index.ts
+│   │   ├── package.json
 │   │   └── tsconfig.json
-│   ├── api-spec
+│   ├── api-spec/
 │   │   ├── openapi.yaml
 │   │   ├── orval.config.ts
 │   │   └── package.json
-│   ├── api-zod
-│   │   ├── package.json
-│   │   ├── src
-│   │   │   ├── generated
+│   ├── api-zod/
+│   │   ├── src/
+│   │   │   ├── generated/
 │   │   │   │   ├── api.ts
-│   │   │   │   └── types
+│   │   │   │   └── types/
 │   │   │   │       ├── alert.ts
 │   │   │   │       ├── forecastResult.ts
-│   │   │   │       ├── forecastResultForecastItem.ts
 │   │   │   │       ├── getForecastParams.ts
 │   │   │   │       ├── getPredictionParams.ts
 │   │   │   │       ├── getRiskHistoryParams.ts
 │   │   │   │       ├── globalSummary.ts
 │   │   │   │       ├── healthStatus.ts
-│   │   │   │       ├── index.ts
 │   │   │   │       ├── predictionResult.ts
-│   │   │   │       ├── predictionResultFeatures.ts
-│   │   │   │       ├── predictionResultPredictedRiskLevel.ts
 │   │   │   │       ├── riskEvent.ts
-│   │   │   │       ├── riskEventCategory.ts
-│   │   │   │       ├── riskEventRiskLevel.ts
 │   │   │   │       └── riskHistoryPoint.ts
 │   │   │   └── index.ts
+│   │   ├── package.json
 │   │   └── tsconfig.json
-│   └── db
+│   └── db/
+│       ├── src/
+│       │   ├── schema/
+│       │   │   ├── alerts.ts
+│       │   │   ├── index.ts
+│       │   │   └── riskEvents.ts
+│       │   ├── ensure-schema.ts
+│       │   └── index.ts
 │       ├── drizzle.config.ts
 │       ├── package.json
-│       ├── src
-│       │   ├── ensure-schema.ts
-│       │   ├── index.ts
-│       │   └── schema
-│       │       ├── alerts.ts
-│       │       ├── index.ts
-│       │       └── riskEvents.ts
 │       └── tsconfig.json
+├── scripts/
+│   ├── src/
+│   │   └── hello.ts
+│   ├── package.json
+│   ├── post-merge.sh
+│   └── tsconfig.json
+├── .env
+├── .gitignore
+├── .npmrc
+├── docker-compose.yml
+├── handover.md
 ├── package.json
 ├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml
-├── scripts
-│   ├── package.json
-│   ├── post-merge.sh
-│   ├── src
-│   │   └── hello.ts
-│   └── tsconfig.json
+├── README.md
 ├── tree.md
 ├── tsconfig.base.json
 └── tsconfig.json
+```
+
+## Notes
+
+- `artifacts/` contains the runnable app surfaces: the API server and the dashboard.
+- `lib/api-spec` is the contract source; `lib/api-client-react` and `lib/api-zod` contain generated client/types derived from it.
+- `.local/` is present in this checkout and contains local Codex/pnpm support data rather than app source.

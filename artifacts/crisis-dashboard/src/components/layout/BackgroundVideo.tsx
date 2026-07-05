@@ -7,8 +7,10 @@ type BackgroundVideoProps = {
   src?: string;
 };
 
-const defaultStreamUrl = "https://stream.mux.com/BuGGTsiXq1T00WUb8qfURrHkTCbhrkfFLSv4uAOZzdhw.m3u8";
-const defaultPoster = "/opengraph.jpg";
+const defaultStreamUrl =
+  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260319_055001_8e16d972-3b2b-441c-86ad-2901a54682f9.mp4";
+
+const defaultPoster = "";
 
 export function BackgroundVideo({
   overlayClassName,

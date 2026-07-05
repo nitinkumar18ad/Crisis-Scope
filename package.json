@@ -4,6 +4,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "dev": "pnpm --parallel --stream --filter @workspace/api-server --filter @workspace/crisis-dashboard run dev",
     "dev:dashboard": "pnpm --filter @workspace/crisis-dashboard run dev",
     "dev:api": "pnpm --filter @workspace/api-server run dev",
     "build:dashboard": "pnpm --filter @workspace/crisis-dashboard run build",
