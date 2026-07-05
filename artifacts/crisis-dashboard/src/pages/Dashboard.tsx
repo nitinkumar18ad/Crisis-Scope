@@ -141,20 +141,20 @@ export default function Dashboard() {
 
         <main className="container w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" style={{ maxWidth: "1600px" }}>
           <MagicContainer className="space-y-6">
-            <div className="group rounded-xl border border-border bg-card/30 p-4 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:bg-card/40 hover:shadow-lg hover:shadow-primary/5">
+            <div className="group rounded-xl border border-cyan-300/20 bg-linear-to-r from-cyan-400/10 via-blue-500/10 to-violet-500/10 p-4 shadow-[0_0_28px_rgba(56,189,248,0.10)] backdrop-blur-md transition-all duration-300 hover:border-cyan-300/35 hover:shadow-[0_0_36px_rgba(56,189,248,0.16)]">
               <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                 <div>
-                  <div className="text-base font-semibold uppercase text-muted-foreground transition-colors duration-300 group-hover:text-foreground" style={{ letterSpacing: "0.2em" }}>
+                  <div className="text-base font-semibold uppercase text-cyan-100 transition-colors duration-300 group-hover:text-white" style={{ letterSpacing: "0.2em" }}>
                     Country Search
                   </div>
-                  <p className="mt-1 text-sm text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80">
+                  <p className="mt-1 text-sm text-cyan-100/75 transition-colors duration-300 group-hover:text-cyan-50/90">
                     Search a country to filter the crisis tables and 30-day trend chart together.
                   </p>
                 </div>
                 <div className="w-full max-w-2xl">
                   <div className="flex flex-col gap-2 sm:flex-row">
                     <div className="relative flex-1">
-                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cyan-100/70" />
                       <Input
                         id="country-search-input"
                         name="country-search"
@@ -162,7 +162,7 @@ export default function Dashboard() {
                         onChange={(event) => setCountryQuery(event.target.value)}
                         list="country-search-options"
                         placeholder="Search by country name, for example India or Brazil"
-                        className="pl-9 transition-all duration-300 focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20"
+                        className="pl-9 border-cyan-300/20 bg-slate-950/40 text-slate-100 placeholder:text-slate-400 transition-all duration-300 focus-visible:border-cyan-300/50 focus-visible:ring-2 focus-visible:ring-cyan-300/20"
                       />
                       <datalist id="country-search-options">
                         {countries.map((country) => (
@@ -175,7 +175,7 @@ export default function Dashboard() {
                       variant="outline"
                       onClick={() => setCountryQuery("")}
                       disabled={!countryQuery}
-                      className="sm:w-auto transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
+                      className="sm:w-auto border-cyan-300/20 bg-white/5 text-cyan-100 transition-all duration-300 hover:border-cyan-300/40 hover:bg-cyan-400/10 hover:text-white"
                     >
                       <X className="mr-2 h-4 w-4" />
                       Clear
@@ -188,9 +188,9 @@ export default function Dashboard() {
                         type="button"
                         onClick={() => setCountryQuery(country)}
                         style={{ touchAction: 'manipulation' }}
-                        className={`rounded-full border px-2 py-0.5 sm:px-3 sm:py-1 text-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/10 hover:text-foreground ${matchedCountry === country
-                            ? "border-primary/50 bg-primary/10 text-primary"
-                            : "border-border text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                        className={`rounded-full border px-2 py-0.5 text-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300/40 hover:bg-cyan-400/10 hover:text-white sm:px-3 sm:py-1 ${matchedCountry === country
+                            ? "border-cyan-300/50 bg-cyan-400/15 text-cyan-50 shadow-[0_0_18px_rgba(56,189,248,0.15)]"
+                            : "border-cyan-300/20 bg-white/5 text-cyan-100/70 hover:bg-cyan-400/10 hover:text-white"
                           }`}
                       >
                         {country}
@@ -198,12 +198,12 @@ export default function Dashboard() {
                     ))}
                   </div>
                   {countryQuery && !matchedCountry && (
-                    <p className="mt-2 text-xs text-amber-400">
+                    <p className="mt-2 text-xs text-amber-300">
                       No exact country match yet. Pick one of the suggestions to filter the dashboard.
                     </p>
                   )}
                   {matchedCountry && (
-                    <p className="mt-2 text-xs text-primary">
+                    <p className="mt-2 text-xs text-cyan-100">
                       Filtering tables and chart for {matchedCountry}.
                     </p>
                   )}
@@ -215,7 +215,7 @@ export default function Dashboard() {
             <StatsRow onCardClick={handleCardClick} activeTarget={activeTarget} />
 
             {/* Three crisis sections */}
-            <div ref={crisisSectionRef}>
+            <div id="crisis-intelligence" ref={crisisSectionRef}>
               <SectionDivider label="Crisis Intelligence by Category" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <MagicCard glowColor="6, 182, 212">
@@ -252,25 +252,27 @@ export default function Dashboard() {
             </div>
 
             {/* Filterable world map */}
-            <div ref={mapSectionRef}>
+            <div id="global-risk-map" ref={mapSectionRef}>
               <SectionDivider label="Global Risk Map" />
-              <div className="rounded-xl border border-border bg-card/20 p-1">
-                <Suspense fallback={<div className="h-80 lg:h-105 flex items-center justify-center bg-background/50 text-muted-foreground text-sm">Loading 3D Globe...</div>}>
-                  <WorldMap
-                    onCountrySelect={setSelectedCountry}
-                    highlightHighRisk={mapHighlight === "highRisk"}
-                  />
-                </Suspense>
-              </div>
+              <Suspense fallback={<div className="h-80 lg:h-105 flex items-center justify-center bg-background/50 text-muted-foreground text-sm">Loading 3D Globe...</div>}>
+                <WorldMap
+                  onCountrySelect={setSelectedCountry}
+                  highlightHighRisk={mapHighlight === "highRisk"}
+                />
+              </Suspense>
             </div>
 
             {/* Risk history chart */}
-            <div ref={chartSectionRef}>
+            <div id="risk-trends" ref={chartSectionRef}>
               <SectionDivider
                 label={matchedCountry ? `${matchedCountry} Risk Trends` : "30-Day Risk Trends"}
                 highlighted={activeTarget === "avgRisk"}
               />
-              <MagicCard glowColor="132, 0, 255" enableStars={false} className="p-1">
+              <MagicCard
+                glowColor="56, 189, 248"
+                enableStars={false}
+                className="p-1 border border-cyan-300/20 bg-linear-to-r from-cyan-400/10 via-blue-500/10 to-violet-500/10 shadow-[0_0_28px_rgba(56,189,248,0.10)] backdrop-blur-md transition-all duration-300 hover:border-cyan-300/35 hover:shadow-[0_0_36px_rgba(56,189,248,0.16)]"
+              >
                 <RiskChart
                   highlighted={activeTarget === "avgRisk"}
                   selectedCountry={matchedCountry ?? undefined}
