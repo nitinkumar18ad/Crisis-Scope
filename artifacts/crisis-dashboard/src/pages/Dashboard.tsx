@@ -94,18 +94,18 @@ export default function Dashboard() {
   }, [activeTarget]);
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden text-foreground selection:bg-primary/30">
+    <div className="relative min-h-screen w-full overflow-x-clip text-foreground selection:bg-primary/30">
       <div className="relative z-10">
         <Navbar />
 
         {/* Hero Section */}
         <section className="hero-section relative overflow-hidden">
-  <BackgroundVideo
-    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260319_055001_8e16d972-3b2b-441c-86ad-2901a54682f9.mp4"
-    overlayClassName="hero-video-overlay"
-  />
+          <BackgroundVideo
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260319_055001_8e16d972-3b2b-441c-86ad-2901a54682f9.mp4"
+            overlayClassName="hero-video-overlay"
+          />
 
-  <div className="hero-content relative flex flex-col items-center justify-center px-4 py-16 text-center sm:py-20 md:py-28">
+          <div className="hero-content relative flex flex-col items-center justify-center px-4 py-16 text-center sm:py-20 md:py-28">
             <div
               className="absolute inset-0 z-0 pointer-events-none from-primary/10 via-background/70 to-background"
               style={{ background: "radial-gradient(circle at center, var(--tw-gradient-stops))" }}
@@ -189,8 +189,8 @@ export default function Dashboard() {
                         onClick={() => setCountryQuery(country)}
                         style={{ touchAction: 'manipulation' }}
                         className={`rounded-full border px-2 py-0.5 text-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300/40 hover:bg-cyan-400/10 hover:text-white sm:px-3 sm:py-1 ${matchedCountry === country
-                            ? "border-cyan-300/50 bg-cyan-400/15 text-cyan-50 shadow-[0_0_18px_rgba(56,189,248,0.15)]"
-                            : "border-cyan-300/20 bg-white/5 text-cyan-100/70 hover:bg-cyan-400/10 hover:text-white"
+                          ? "border-cyan-300/50 bg-cyan-400/15 text-cyan-50 shadow-[0_0_18px_rgba(56,189,248,0.15)]"
+                          : "border-cyan-300/20 bg-white/5 text-cyan-100/70 hover:bg-cyan-400/10 hover:text-white"
                           }`}
                       >
                         {country}
@@ -218,7 +218,7 @@ export default function Dashboard() {
             <div id="crisis-intelligence" ref={crisisSectionRef}>
               <SectionDivider label="Crisis Intelligence by Category" />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <MagicCard glowColor="6, 182, 212">
+                <MagicCard glowColor="34, 211, 238" className="border border-cyan-500/30 bg-cyan-950/20 shadow-[0_0_24px_rgba(34,211,238,0.10)] transition-all duration-300 hover:border-cyan-400/50 hover:shadow-[0_0_32px_rgba(34,211,238,0.18)]">
                   <CrisisSection
                     category="climate"
                     onCountrySelect={setSelectedCountry}
@@ -228,7 +228,7 @@ export default function Dashboard() {
                     className="border-none bg-transparent shadow-none"
                   />
                 </MagicCard>
-                <MagicCard glowColor="245, 158, 11">
+                <MagicCard glowColor="245, 158, 11" className="border border-amber-500/30 bg-amber-950/20 shadow-[0_0_24px_rgba(245,158,11,0.10)] transition-all duration-300 hover:border-amber-400/50 hover:shadow-[0_0_32px_rgba(245,158,11,0.18)]">
                   <CrisisSection
                     category="economic"
                     onCountrySelect={setSelectedCountry}
@@ -238,7 +238,7 @@ export default function Dashboard() {
                     className="border-none bg-transparent shadow-none"
                   />
                 </MagicCard>
-                <MagicCard glowColor="244, 63, 94">
+                <MagicCard glowColor="244, 63, 94" className="border border-rose-500/30 bg-rose-950/20 shadow-[0_0_24px_rgba(244,63,94,0.10)] transition-all duration-300 hover:border-rose-400/50 hover:shadow-[0_0_32px_rgba(244,63,94,0.18)]">
                   <CrisisSection
                     category="supply_chain"
                     onCountrySelect={setSelectedCountry}

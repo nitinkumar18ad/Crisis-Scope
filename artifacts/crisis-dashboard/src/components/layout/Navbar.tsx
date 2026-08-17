@@ -64,7 +64,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   return (
-    <header className="site-header sticky top-0 z-50 w-full max-w-[100vw] overflow-x-hidden border-b border-border/40 bg-background/90">
+    <header className="site-header sticky top-0 z-50 w-full border-b border-border/40 bg-background/90 backdrop-blur-xl">
       <div
         className="header-parallax pointer-events-none absolute inset-0 opacity-70"
         style={{
@@ -150,9 +150,8 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-72 border-l border-border/40 bg-slate-950/95 backdrop-blur-xl transform transition-transform duration-300 ease-in-out md:hidden ${
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed inset-y-0 right-0 z-50 w-72 border-l border-border/40 bg-slate-950/95 backdrop-blur-xl transform transition-transform duration-300 ease-in-out md:hidden ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="flex flex-col gap-4 p-4">
           <button
@@ -162,13 +161,13 @@ export function Navbar() {
           >
             <X className="h-6 w-6" />
           </button>
-          
+
           <div className="mt-8 flex flex-col gap-4">
             <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-sm text-muted-foreground">
               <span className="mb-1 block text-xs uppercase tracking-wider">Current Time (UTC)</span>
               {time.toISOString().replace('T', ' ').substring(0, 19)}
             </div>
-            
+
             <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
               <Activity className="h-4 w-4 text-primary" />
               <div className="flex flex-col">
@@ -200,10 +199,10 @@ export function Navbar() {
           </div>
         </div>
       </div>
-      
+
       {/* Overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />

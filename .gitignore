@@ -64,3 +64,5 @@ build/
 
 # Logs
 *.log
+*-out.txt
+*-err.txt

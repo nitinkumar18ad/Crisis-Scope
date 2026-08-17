@@ -25,38 +25,46 @@ const CRISIS_CONFIG: Record<Category, {
   color: string;
   borderColor: string;
   bgColor: string;
+  headerBg: string;
   badgeColor: string;
   activeBorder: string;
+  rowHover: string;
 }> = {
   climate: {
     title: "Climate Crisis",
     subtitle: "Extreme weather · floods · wildfires",
     Icon: Cloud,
     color: "text-cyan-400",
-    borderColor: "border-cyan-500/30",
-    bgColor: "bg-cyan-500/5",
-    badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
-    activeBorder: "border-cyan-400/60 shadow-cyan-500/10 shadow-lg",
+    borderColor: "border-cyan-500/35",
+    bgColor: "bg-gradient-to-b from-cyan-950/35 via-cyan-950/15 to-cyan-950/5",
+    headerBg: "bg-cyan-950/40",
+    badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
+    activeBorder: "border-cyan-400/80 shadow-cyan-500/20 shadow-xl",
+    rowHover: "hover:bg-cyan-500/10",
   },
   economic: {
     title: "Economic Crisis",
     subtitle: "Market collapse · inflation · debt",
     Icon: TrendingDown,
     color: "text-amber-400",
-    borderColor: "border-amber-500/30",
-    bgColor: "bg-amber-500/5",
-    badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-    activeBorder: "border-amber-400/60 shadow-amber-500/10 shadow-lg",
+    borderColor: "border-amber-500/35",
+    bgColor: "bg-gradient-to-b from-amber-950/35 via-amber-950/15 to-amber-950/5",
+    headerBg: "bg-amber-950/40",
+    badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+    activeBorder: "border-amber-400/80 shadow-amber-500/20 shadow-xl",
+    rowHover: "hover:bg-amber-500/10",
   },
   supply_chain: {
     title: "Supply Chain",
     subtitle: "Port disruptions · shortages · logistics",
     Icon: Ship,
     color: "text-rose-400",
-    borderColor: "border-rose-500/30",
-    bgColor: "bg-rose-500/5",
-    badgeColor: "bg-rose-500/10 text-rose-400 border-rose-500/30",
-    activeBorder: "border-rose-400/60 shadow-rose-500/10 shadow-lg",
+    borderColor: "border-rose-500/35",
+    bgColor: "bg-gradient-to-b from-rose-950/35 via-rose-950/15 to-rose-950/5",
+    headerBg: "bg-rose-950/40",
+    badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40",
+    activeBorder: "border-rose-400/80 shadow-rose-500/20 shadow-xl",
+    rowHover: "hover:bg-rose-500/10",
   },
 };
 
@@ -236,7 +244,7 @@ export const CrisisSection = React.memo(function CrisisSection({
                       "w-full flex items-center gap-3 px-4 py-3 min-h-[50px] text-left transition-colors group",
                       isRowHighlighted
                         ? "bg-destructive/10 hover:bg-destructive/15"
-                        : "hover:bg-white/5",
+                        : cfg.rowHover,
                     )}
                   >
                     <span className="text-[10px] font-mono text-muted-foreground w-4 shrink-0">
