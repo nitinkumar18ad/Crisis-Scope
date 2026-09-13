@@ -119,7 +119,7 @@ export default function Dashboard() {
               </div>
 
               <h1 className="hero-title px-2 text-5xl font-extrabold leading-none tracking-tight text-transparent bg-clip-text bg-linear-to-r from-white via-slate-100 to-cyan-300 sm:text-6xl lg:text-7xl animate-hero-fade-up" style={{ animationDelay: "160ms" }}>
-                Predict Global Crises
+                Know Upcoming Crises
                 <br />
                 Before They Happen
               </h1>
