@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Radar } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { getCountryCode } from "@/lib/countries";
+
 export function AnomaliesList() {
   const { data: anomalies, isLoading } = useGetAnomalies({
     query: { refetchInterval: 30000, queryKey: ["/api/risk/anomalies"] }
@@ -31,13 +33,27 @@ export function AnomaliesList() {
         ) : (
           <div className="space-y-3">
             {anomalies?.map((event) => (
-              <div 
-                key={event.id} 
+              <div
+                key={event.id}
                 className="p-3 rounded-md border border-primary/30 bg-primary/5 flex items-center justify-between"
               >
-                <div>
-                  <div className="font-medium text-sm text-foreground">{event.country}</div>
-                  <div className="text-xs text-muted-foreground uppercase mt-1">{event.category}</div>
+                <div className="flex items-center gap-2.5">
+                  {(() => {
+                    const code = getCountryCode(event.country);
+                    return code ? (
+                      <img
+                        src={`https://flagcdn.com/w40/${code}.png`}
+                        alt={event.country}
+                        className="w-5 h-auto rounded-[2px] shadow-xs"
+                      />
+                    ) : (
+                      <span>🌐</span>
+                    );
+                  })()}
+                  <div>
+                    <div className="font-medium text-sm text-foreground">{event.country}</div>
+                    <div className="text-xs text-muted-foreground uppercase mt-0.5">{event.category.replace("_", " ")}</div>
+                  </div>
                 </div>
                 <div className="text-right">
                   <Badge variant="outline" className="text-primary border-primary bg-primary/10">

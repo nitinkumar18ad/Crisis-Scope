@@ -247,4 +247,13 @@ pnpm run ensure-schema
 - 2026-06-27: Fixed missing-table runtime failures by adding `lib/db/src/ensure-schema.ts` and the `lib/db` script `ensure-schema`. Also documented that `artifacts/api-server/.env` is the important DB env for the running API, while the root `.env` may differ.
 - 2026-07-05: Frontend dev/build config lives in `artifacts/crisis-dashboard/vite.config.ts`; it resolves `@` to `src`, `@assets` to `attached_assets`, builds to `dist/public`, proxies `/api` to `http://localhost:8080`, and uses `PORT` with a default of `5173`.
 - 2026-07-05: Current UI work is concentrated in `artifacts/crisis-dashboard/src/components/ui/LightBeamButton.tsx`, `MagicBento.tsx`, `artifacts/crisis-dashboard/src/components/layout/BackgroundVideo.tsx`, and `artifacts/crisis-dashboard/src/components/dashboard/StatsRow.tsx`.
-- 2026-08-17: Performed full codebase cleanup. Deleted 45 unused files including leftover run logs, unreferenced images (`logo.png`), empty directories (`.codex`), and 36 unreferenced UI component files in `artifacts/crisis-dashboard/src/components/ui/`. Fixed unused import in `artifacts/api-server/src/routes/risk.ts` and updated `.gitignore` for log file patterns.
+- 2026-11-10: Fixed backend not starting and map error. Root cause: Supabase remote DB unreachable locally, CartoDB tile server requires internet. Changes made:
+  1. `artifacts/api-server/src/mock-db.ts` — new in-memory database with 130+ seeded risk events (economic, supply chain, climate, 30 days history) and 11 alerts.
+  2. `artifacts/api-server/src/db-resolver.ts` — tries real DB on startup; falls back to mock-db automatically.
+  3. `artifacts/api-server/src/routes/risk.ts` — rewrote all routes to work with both real and mock DB via `app.locals.useRealDb`.
+  4. `artifacts/api-server/src/app.ts` — now does async DB check on startup and passes `useRealDb` flag to scheduler.
+  5. `artifacts/api-server/src/scheduler.ts` — connected live external feeds (USGS Real-time Earthquakes, ReliefWeb UN Reports, NewsAPI live articles, OpenWeather live data). Real fetched data is saved directly to the database or memory store.
+  6. `artifacts/crisis-dashboard/src/components/dashboard/WorldMap.tsx` — uses OpenStreetMap tiles with dark CSS theme, accurate country geographic coordinates from `@/lib/countries`, and permanent country name badges with national flags directly on the map.
+  7. Filtered out pseudocountry `Global` from all country crisis sections, summary counters, anomalies, search suggestions, and the WorldMap.
+  8. Created `@/lib/countries.ts` with comprehensive ISO-alpha2 code mappings and official coordinate centers for worldwide nations, ensuring high-res flags for all countries (Ukraine, Somalia, Bangladesh, etc.).
+  9. `artifacts/api-server/.env` — cleaned up duplicate DATABASE_URL entries; primary is local postgres, Supabase kept as comment.

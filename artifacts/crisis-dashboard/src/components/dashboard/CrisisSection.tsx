@@ -74,17 +74,7 @@ const RISK_LEVEL_STYLE: Record<string, string> = {
   Low: "bg-success/10 text-success border-success/30",
 };
 
-const COUNTRY_CODES: Record<string, string> = {
-  USA: "us", China: "cn", India: "in", Brazil: "br", Germany: "de",
-  Russia: "ru", Australia: "au", Japan: "jp", UK: "gb", France: "fr",
-  Nigeria: "ng", Pakistan: "pk", Indonesia: "id", Bangladesh: "bd",
-  Mexico: "mx", Canada: "ca", "South Korea": "kr", Turkey: "tr",
-  Iran: "ir", Egypt: "eg", "South Africa": "za", Taiwan: "tw",
-  Vietnam: "vn", "Saudi Arabia": "sa", Netherlands: "nl", Singapore: "sg",
-  Argentina: "ar", Afghanistan: "af", Vanuatu: "vu", Micronesia: "fm",
-  Tonga: "to", Philippines: "ph", "Papua New Guinea": "pg",
-  "Kermadec Islands region": "nz", "New Zealand": "nz", "EU": "eu"
-};
+import { getCountryCode } from "@/lib/countries";
 
 export const CrisisSection = React.memo(function CrisisSection({
   category,
@@ -104,7 +94,9 @@ export const CrisisSection = React.memo(function CrisisSection({
 
   const events = useMemo(() => {
     if (!allEvents) return [];
-    let filtered = allEvents.filter((e) => e.category === category);
+    let filtered = allEvents.filter(
+      (e) => e.category === category && e.country && e.country !== "Global" && e.country !== "Unknown"
+    );
     if (selectedCountry) filtered = filtered.filter((e) => e.country === selectedCountry);
     if (highlightAnomalies) filtered = filtered.filter((e) => e.isAnomaly);
     if (highlightHighRisk) filtered = filtered.filter((e) => e.riskLevel === "High");
@@ -113,7 +105,14 @@ export const CrisisSection = React.memo(function CrisisSection({
 
   const allCategoryEvents = useMemo(() => {
     if (!allEvents) return [];
-    return allEvents.filter((e) => e.category === category && (!selectedCountry || e.country === selectedCountry));
+    return allEvents.filter(
+      (e) =>
+        e.category === category &&
+        e.country &&
+        e.country !== "Global" &&
+        e.country !== "Unknown" &&
+        (!selectedCountry || e.country === selectedCountry)
+    );
   }, [allEvents, category, selectedCountry]);
 
   const stats = useMemo(() => {
@@ -253,15 +252,19 @@ export const CrisisSection = React.memo(function CrisisSection({
 
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <span className="shrink-0 w-6 h-6 flex items-center justify-center text-base">
-                        {COUNTRY_CODES[event.country] ? (
-                          <img 
-                            src={`https://flagcdn.com/w20/${COUNTRY_CODES[event.country]}.png`} 
-                            alt={event.country} 
-                            className="w-5 h-auto rounded-[2px] object-cover" 
-                          />
-                        ) : (
-                          "🌍"
-                        )}
+                        {(() => {
+                          const code = getCountryCode(event.country);
+                          return code ? (
+                            <img
+                              src={`https://flagcdn.com/w40/${code}.png`}
+                              alt={event.country}
+                              className="w-5 h-auto rounded-[2px] object-cover shadow-xs border border-white/10"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span className="text-sm">🌐</span>
+                          );
+                        })()}
                       </span>
                       <div className="min-w-0">
                         <div className="text-sm font-medium truncate text-foreground/90 group-hover:text-foreground">

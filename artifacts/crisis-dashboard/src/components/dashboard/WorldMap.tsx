@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import { useGetRiskData } from "@workspace/api-client-react";
 import { Badge } from "@/components/ui/badge";
@@ -8,8 +8,11 @@ import { cn } from "@/lib/utils";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
+// Fix Leaflet default icon paths (broken by bundlers)
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({ iconUrl: markerIcon, shadowUrl: markerShadow });
+
+import { getCountryCode, getCountryCoordinates } from "@/lib/countries";
 
 type Category = "climate" | "economic" | "supply_chain" | "all";
 
@@ -74,6 +77,7 @@ export function WorldMap({
 
   const visibleEvents =
     riskEvents?.filter((e) => {
+      if (!e.country || e.country === "Global" || e.country === "Unknown") return false;
       const catMatch = filter === "all" || e.category === filter;
       const riskMatch = !highlightHighRisk || e.riskLevel === "High";
       return catMatch && riskMatch;
@@ -87,6 +91,7 @@ export function WorldMap({
       className="rounded-xl border border-border overflow-hidden bg-card/50 backdrop-blur-sm"
       data-testid="world-map"
     >
+      {/* Category filter tabs */}
       <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50 bg-background/40 flex-wrap">
         {CATEGORY_TABS.map(({ key, label, Icon, color, activeClass }) => (
           <button
@@ -125,6 +130,7 @@ export function WorldMap({
         </div>
       </div>
 
+      {/* Map container */}
       <div className="h-[420px] relative z-0">
         {isLoading ? (
           <div className="w-full h-full flex items-center justify-center bg-background/50">
@@ -140,57 +146,88 @@ export function WorldMap({
             maxBounds={[[-90, -180], [90, 180]]}
           >
             <TileLayer
-              attribution=""
-              url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+              url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+              className="dark-tiles"
             />
-            {visibleEvents.map((event) => (
-              <CircleMarker
-                key={`${event.id}-${filter}-${highlightHighRisk}`}
-                center={[event.lat, event.lng]}
-                radius={Math.max(5, event.riskScore * 16)}
-                pathOptions={{
-                  color: getRiskColor(event.riskLevel),
-                  fillColor: getRiskColor(event.riskLevel),
-                  fillOpacity: highlightHighRisk ? 0.85 : 0.65,
-                  weight: event.isAnomaly || highlightHighRisk ? 2 : 1,
-                }}
-                eventHandlers={{ click: () => onCountrySelect(event.country) }}
-              >
-                <Popup>
-                  <div className="p-1 min-w-[140px]">
-                    <div className="font-bold text-sm mb-1">
+            {visibleEvents.map((event) => {
+              const [lat, lng] = getCountryCoordinates(event.country) || [event.lat, event.lng];
+              const code = getCountryCode(event.country);
+
+              return (
+                <CircleMarker
+                  key={`${event.id}-${filter}-${highlightHighRisk}`}
+                  center={[lat, lng]}
+                  radius={Math.max(5, event.riskScore * 16)}
+                  pathOptions={{
+                    color: getRiskColor(event.riskLevel),
+                    fillColor: getRiskColor(event.riskLevel),
+                    fillOpacity: highlightHighRisk ? 0.85 : 0.65,
+                    weight: event.isAnomaly || highlightHighRisk ? 2 : 1,
+                  }}
+                  eventHandlers={{ click: () => onCountrySelect(event.country) }}
+                >
+                  <Tooltip
+                    direction="top"
+                    offset={[0, -Math.max(5, event.riskScore * 16)]}
+                    opacity={0.95}
+                    permanent
+                    className="country-map-label"
+                  >
+                    <span className="inline-flex items-center gap-1 font-semibold text-[11px] tracking-wide text-foreground">
+                      {code && (
+                        <img
+                          src={`https://flagcdn.com/w20/${code}.png`}
+                          alt=""
+                          className="w-3.5 h-auto rounded-[1px] inline-block"
+                        />
+                      )}
                       {event.country}
-                    </div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge
-                        variant={
-                          event.riskLevel === "High"
-                            ? "destructive"
-                            : "secondary"
-                        }
-                        className="text-[10px]"
-                      >
-                        {event.riskLevel}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground uppercase">
-                        {event.category.replace("_", " ")} | {event.source}
-                      </span>
-                    </div>
-                    <div className="text-xs">
-                      Risk Score:{" "}
-                      <span className="font-mono font-bold">
-                        {(event.riskScore * 100).toFixed(1)}%
-                      </span>
-                    </div>
-                    {event.isAnomaly && (
-                      <div className="text-[10px] text-destructive mt-1 font-medium">
-                        Anomaly detected
+                    </span>
+                  </Tooltip>
+                  <Popup>
+                    <div className="p-1 min-w-[150px]">
+                      <div className="font-bold text-sm mb-1 flex items-center gap-1.5">
+                        {code && (
+                          <img
+                            src={`https://flagcdn.com/w40/${code}.png`}
+                            alt={event.country}
+                            className="w-5 h-auto rounded-[2px] shadow-xs"
+                          />
+                        )}
+                        <span>{event.country}</span>
                       </div>
-                    )}
-                  </div>
-                </Popup>
-              </CircleMarker>
-            ))}
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge
+                          variant={
+                            event.riskLevel === "High"
+                              ? "destructive"
+                              : "secondary"
+                          }
+                          className="text-[10px]"
+                        >
+                          {event.riskLevel}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground uppercase">
+                          {event.category.replace("_", " ")} | {event.source}
+                        </span>
+                      </div>
+                      <div className="text-xs">
+                        Risk Score:{" "}
+                        <span className="font-mono font-bold">
+                          {(event.riskScore * 100).toFixed(1)}%
+                        </span>
+                      </div>
+                      {event.isAnomaly && (
+                        <div className="text-[10px] text-destructive mt-1 font-medium">
+                          Anomaly detected
+                        </div>
+                      )}
+                    </div>
+                  </Popup>
+                </CircleMarker>
+              );
+            })}
           </MapContainer>
         )}
       </div>

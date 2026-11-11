@@ -12,6 +12,7 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "rec
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { getCountryCode } from "@/lib/countries";
 
 interface CountryPredictionModalProps {
   country: string | null;
@@ -143,6 +144,8 @@ export function CountryPredictionModal({ country, onClose }: CountryPredictionMo
     </div>
   );
 
+  const countryCode = country ? getCountryCode(country) : null;
+
   if (isMobile) {
     return (
       <Drawer open={!!country} onOpenChange={() => onClose()}>
@@ -151,7 +154,14 @@ export function CountryPredictionModal({ country, onClose }: CountryPredictionMo
             <DrawerHeader className="text-left px-0">
               <DrawerTitle className="flex items-center gap-2 text-xl">
                 <Brain className="h-5 w-5 text-primary" />
-                AI Prediction: {country}
+                {countryCode && (
+                  <img
+                    src={`https://flagcdn.com/w40/${countryCode}.png`}
+                    alt={country || ""}
+                    className="w-6 h-auto rounded-[2px] shadow-xs"
+                  />
+                )}
+                <span>AI Prediction: {country}</span>
               </DrawerTitle>
             </DrawerHeader>
             {content}
@@ -167,7 +177,14 @@ export function CountryPredictionModal({ country, onClose }: CountryPredictionMo
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Brain className="h-5 w-5 text-primary" />
-            AI Prediction: {country}
+            {countryCode && (
+              <img
+                src={`https://flagcdn.com/w40/${countryCode}.png`}
+                alt={country || ""}
+                className="w-6 h-auto rounded-[2px] shadow-xs"
+              />
+            )}
+            <span>AI Prediction: {country}</span>
           </DialogTitle>
         </DialogHeader>
         {content}

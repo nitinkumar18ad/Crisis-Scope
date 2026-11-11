@@ -36,9 +36,18 @@ export default function Dashboard() {
   const countries = useMemo<string[]>(() => {
     if (!riskEvents) return [];
 
-    return Array.from(new Set(riskEvents.map((event: RiskEvent) => event.country))).sort((a: string, b: string) =>
-      a.localeCompare(b),
-    );
+    return Array.from(
+      new Set(
+        riskEvents
+          .map((event: RiskEvent) => event.country)
+          .filter(
+            (country: string) =>
+              country &&
+              country.toLowerCase() !== "global" &&
+              country.toLowerCase() !== "unknown"
+          )
+      )
+    ).sort((a: string, b: string) => a.localeCompare(b));
   }, [riskEvents]);
 
   const normalizedQuery = countryQuery.trim().toLowerCase();

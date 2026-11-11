@@ -3,6 +3,7 @@ import cors from "cors";
 import { pinoHttp } from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { checkDbConnection } from "./db-resolver";
 
 const app = express();
 
@@ -29,7 +30,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import { startScheduler } from "./scheduler";
+// Default to mock DB; will be updated after connection check
+app.locals.useRealDb = false;
 
 app.get("/", (_req, res) => {
   res.json({ status: "ok", message: "Crisis Scope API is running", docs: "/api/healthz" });
@@ -37,8 +39,19 @@ app.get("/", (_req, res) => {
 
 app.use("/api", router);
 
+// Initialise DB connection and start background jobs
+(async () => {
+  const isReal = await checkDbConnection();
+  app.locals.useRealDb = isReal;
 
-// Start background jobs
-startScheduler();
+  if (isReal) {
+    logger.info("Using real PostgreSQL database");
+  } else {
+    logger.info("Using mock in-memory database (offline mode)");
+  }
+
+  const { startScheduler } = await import("./scheduler");
+  startScheduler(isReal);
+})();
 
 export default app;
